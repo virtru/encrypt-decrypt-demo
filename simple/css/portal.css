@@ -1,0 +1,208 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+body {
+  background: #F3F4F7;
+}
+
+
+
+.incompat-title{
+  font-family: 'Raleway';
+  margin: -28px -25px 25px;
+  padding: 15px 25px;
+  padding-top: 90px;
+  line-height: 30px;
+  font-size: 40px;
+  color: #003eb3;
+  text-align:center;
+}
+
+.incompat-sub{
+  font-family: 'Raleway';
+  margin: -28px -25px 25px;
+  padding: 15px 25px;
+  padding-top: 20px;
+  line-height: 30px;
+  font-size: 20px;
+  color: #7E7D7C;
+  text-align:center;
+}
+
+
+.login {
+  margin: 40px auto;
+  width: 310px;
+  padding: 30px 25px;
+  background: white;
+  border: 1px solid #c4c4c4;
+}
+
+h3{
+  width:100%; 
+  text-align:center;
+  background-color: #7E7D7C;
+  border-bottom: 1px; 
+  line-height:0.1em; 
+  margin:10px 0 40px; 
+}
+
+h3 span{
+   font-family: 'Raleway';
+   font-size: 15px;
+   color: #7E7D7C;
+   background:#fff; 
+   padding:0 10px; 
+}
+
+h1.login-title {
+  font-family: 'Raleway';
+  margin: -28px -25px 25px;
+  padding: 15px 25px;
+  line-height: 30px;
+  font-size: 20px;
+  color: #7E7D7C;
+  text-align:center;
+  background: #f7f7f7;
+}
+
+h2.login-instruction {
+  font-family: 'Raleway';
+  margin: -28px -25px 25px;
+  padding: 5px 25px;
+  line-height: 30px;
+  font-size: 15px;
+  color: #7E7D7C;
+  text-align:center;
+}
+
+.login-input {
+  width: 295px;
+  height: 50px;
+  margin-bottom: 35px;
+  padding-left:10px;
+  font-size: 15px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-input:focus {
+    border-color:#6e8095;
+    outline: none;
+}
+
+.text-input {
+  width: 295px;
+  height: 50px;
+  margin-bottom: 35px;
+  padding-left:10px;
+  font-size: 13px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.login-button-google{
+  width: 570px;
+  height: 100px;
+  margin-top: -30px;
+  margin-left: -125px;
+  color: #fff;
+  transform: scale(0.5);
+  background-image: url("../img/googlelogin.png");
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer; 
+  outline:0;
+}
+
+.login-button-office365{
+  width: 560px;
+  height: 90px;
+  margin-top: -30px;
+  margin-left: -125px;
+  color: #fff;
+  transform: scale(0.5);
+  background-image: url("../img/office365login.png");
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer; 
+  outline:0;
+}
+
+.login-button-outlook{
+  width: 560px;
+  height: 100px;
+  margin-top: -30px;
+  margin-left: -125px;
+  color: #fff;
+  transform: scale(0.5);
+  background-image: url("../img/outlooklogin.png");
+  border: 0;
+  border-radius: 5px;
+  cursor: pointer; 
+  outline:0;
+}
+
+.login-lost
+{
+  text-align:center;
+  margin-bottom:0px;
+}
+
+.login-lost a
+{
+  color:#666;
+  text-decoration:none;
+  font-size:13px;
+}
+
+.button {
+  font-family: 'Raleway';
+  color: #fff !important;
+  background: #4585ff;
+  padding: 10px 40px;
+  border-radius: 25px;
+  display: inline-block;
+  border: none;
+  font-size: 15px;
+  left: 50%;
+  margin-right: -50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.button:hover {
+  background: #003eb3;
+  cursor: pointer;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+input[type="text"]
+{
+    font-family: 'Raleway';
+    font-size:17px;
+}
+
+.loader {
+  border: 16px solid #f3f3f3; 
+  border-top: 16px solid #3498db; 
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  animation: spin 2s linear infinite;
+  left: 43%;
+  margin-right: -50%;
+  position: relative;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+

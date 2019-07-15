@@ -1,0 +1,33 @@
+env:
+  AWS_ACCOUNT_ALIAS: common
+  ENVIRONMENT_NAME: common
+  DEPLOY_ENVIRONMENT_NAME: production
+  S3_PATH: dd
+  S3_HOSTNAME: demos.developer.virtru.com
+
+agents:
+  queue: "${BUILDKITE_QUEUE:-default}"
+agent_queue: &agent_queue "queue=${BUILDKITE_QUEUE:-default}"
+
+steps:
+
+  - label: "Create build artifact"
+    command: "tar -cvzf build.tar.gz --xform 's/simple/build/' simple"
+    artifact_paths:
+      - "build.tar.gz"
+    agents:
+      - *agent_queue
+
+  - wait
+
+  - label: "Upload dd demo to s3"
+    command: "buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh"
+    agents:
+      - *agent_queue
+
+  - wait
+
+  - label: ":s3: Invalidate CloudFront Cache"
+    command: "buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh"
+    agents:
+      - *agent_queue
