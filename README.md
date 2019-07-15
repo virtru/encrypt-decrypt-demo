@@ -29,8 +29,8 @@ foo@bar:~$ cd my-projects
 2. Clone this repository
 
 ```console
-foo@bar:~$ git clone git@github.com:virtru/tdf3-saas-demo.git
-foo@bar:~$ cd tdf3-saas-demo
+foo@bar:~$ git clone git@github.com:virtru/encrypt-decrypt-demo.git
+foo@bar:~$ cd encrypt-decrypt-demo
 ```
 
 ## Running the Demo
@@ -51,7 +51,7 @@ Navigate to https://local.virtru.com/ in your browser. On Chrome you may need to
 
 You'll be taken to the demo's login screen. Click 'Start', and log in with your Google, Outlook or Office365 account. If you have neither, you can enter your email address to receive a 8-digit code, e.g., `V-12345678`. 
 
-Once logged in, you should see two drag and drop areas for encrypting and decrypting TDF3 files.
+Once logged in, you should see two drag and drop areas for encrypting and decrypting TDF files.
 
 ## Encrypting and Decrypting Files
 
