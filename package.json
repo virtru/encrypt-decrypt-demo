@@ -1,7 +1,7 @@
 {
-  "name": "tdf3-saas-demo",
+  "name": "encrypt-decrypt-demo",
   "version": "0.2.2",
-  "description": "Simple example to encrypt and decrypt files in the TDF3 spec using Virtru hosted KAS and EAS.",
+  "description": "Simple example to encrypt and decrypt files in the TDF spec using Virtru hosted KAS and EAS.",
   "scripts": {
     "build": ". simple/scripts/build.sh",
     "setup": "npm install; npm run build",
