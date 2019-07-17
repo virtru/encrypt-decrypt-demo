@@ -6,7 +6,12 @@ let authType;
 //construct a redirect url needed for the demo
 const buildRedirectUrl = () => {
   type = authType || 'email';
-  const redirectUrl = `${BASE_URL}dragdrop.html?userId=${email}&authType=${type}`;
+  let redirectUrl = `${BASE_URL}dragdrop.html?userId=${email}&authType=${type}`;
+
+  const envParam = getEnvParam();
+  if(envParam){
+    redirectUrl += `&env=${envParam}`;
+  }
   return redirectUrl;
 };
 

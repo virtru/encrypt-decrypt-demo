@@ -60,8 +60,6 @@ function processFile(fileOb, completion){
         }else{
             alert('An error occurred attempting to encrypt this file. Please be sure you have authenticated, and try again.'); 
         }
-
-
     }
   };
 
@@ -477,6 +475,19 @@ function init(){
   setupLogoutButton();
 }
 
-init();
+//Handle a single file encryption - useful for automated testing
+function uploadSingleFileEncrypt(evt){
+  shouldEncrypt=true;
+  handleFileSelect(evt);
+}
+//Handle a single file decryption - useful for automated testing
+function uploadSingleFileDecrypt(evt){
+  shouldEncrypt=false;
+  handleFileSelect(evt);
+}
 
+document.getElementById('enc_file_upload').addEventListener('change', uploadSingleFileEncrypt);
+document.getElementById('dec_file_upload').addEventListener('change', uploadSingleFileDecrypt);
+
+init();
 

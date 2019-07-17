@@ -34,7 +34,7 @@ function getEnvironmentString() {
 
   //Use the end user's choice of environment if they have chosen one
   if(envParam){
-    return envParam;
+    return envParam.replace("#","");
   }
 
   //It doesn't look like they've chose a specific one, so choose the correct one by deploy env
@@ -51,6 +51,12 @@ function getEndpointsByEnvironment(){
       "kasEndpoint": "https://api-develop01.develop.virtru.com/kas",
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
+    },
+    "develop04": {
+      "stage": "develop04",
+      "kasEndpoint": "https://api-develop01.develop.virtru.com/kas",
+      "acmEndpoint": "https://acm-develop04.develop.virtru.com",
+      "easEndpoint": "https://accounts-develop04.develop.virtru.com",
     },
     "staging": {
       "stage": "staging",
