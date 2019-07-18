@@ -1,12 +1,11 @@
 cleanup(){
-	if [ -f ./simple/js/tdf3.js ]; then 
-		rm ./simple/js/tdf3.js; 
+	if [ -f ./simple/js/demo-utils.js ]; then 
+		rm ./simple/js/demo-utils.js; 
 	fi
 }
 
 build(){
-	curl https://sdk.virtru.com/js/latest/virtru-sdk.min.js --output ./simple/js/virtru-tdf3-js.min.js
-	browserify ./simple/js/tdf-browserify.js -o ./simple/js/tdf3.js
+	browserify ./simple/js/tdf-browserify.js -o ./simple/js/demo-utils.js
 }
 
 cleanup && build

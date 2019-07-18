@@ -12,9 +12,8 @@ const moment = require('moment');
 const simpleTDFUtil = require('./saas-tdf-util.js');
 const simpleEncryptDecrypt = require('./saas-encrypt-decrypt.js');
 const oauth = require('./virtruauth.min.js');
-const client = require('./virtru-tdf3-js.min.js');
 
-const imports = [simpleTDFUtil, simpleEncryptDecrypt, oauth, client];
+const imports = [simpleTDFUtil, simpleEncryptDecrypt, oauth];
 
 //Load all global properties of our explicitly imported modules on the window
 imports.forEach((i) => {
