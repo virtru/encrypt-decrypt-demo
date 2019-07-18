@@ -56,7 +56,7 @@ function getEndpointsByEnvironment(){
       "kasEndpoint": "https://api-develop01.develop.virtru.com/kas",
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
-      "sdkUrlBase":  "https://sdk.virtru.com/js/latest/virtru-sdk.min.js"
+      "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
     },
     "staging": {
       "stage": "staging",
