@@ -21,7 +21,7 @@ steps:
   - wait
 
   - label: "Upload dd demo to s3"
-    command: "buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh"
+    command: "buildkite-scripts/scripts/developer-demos/deploy-to-s3.sh"
     agents:
       - *agent_queue
 
