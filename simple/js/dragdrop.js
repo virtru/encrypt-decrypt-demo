@@ -60,8 +60,6 @@ function processFile(fileOb, completion){
         }else{
             alert('An error occurred attempting to encrypt this file. Please be sure you have authenticated, and try again.'); 
         }
-
-
     }
   };
 
@@ -467,6 +465,29 @@ function setupLogoutButton(){
   getById('logoutButton').addEventListener('click', logout);
 }
 
+//Handle a single file encryption - useful for automated testing
+function uploadSingleFileEncrypt(evt){
+  shouldEncrypt=true;
+  handleFileSelect(evt);
+}
+
+//Handle a single file decryption - useful for automated testing
+function uploadSingleFileDecrypt(evt){
+  shouldEncrypt=false;
+  handleFileSelect(evt);
+}
+
+//Handle a single file load for policies - useful for automated testing
+function loadSingleFileView(evt){
+  handleFileViewer(evt);
+}
+
+function setupFileInputs(){
+  getById('enc_file_upload').addEventListener('change', uploadSingleFileEncrypt);
+  getById('dec_file_upload').addEventListener('change', uploadSingleFileDecrypt);
+  getById('view_file_upload').addEventListener('change', loadSingleFileView);
+}
+
 //Initialize the elements and tabs as needed
 function init(){
   forceLoginIfNecessary();
@@ -475,8 +496,8 @@ function init(){
   activateUsersTab();            
   setLoggedInUserLabel();
   setupLogoutButton();
+  setupFileInputs();
 }
 
 init();
-
 

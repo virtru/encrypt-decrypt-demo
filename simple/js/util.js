@@ -34,11 +34,16 @@ function getEnvironmentString() {
 
   //Use the end user's choice of environment if they have chosen one
   if(envParam){
-    return envParam;
+    return envParam.replace("#","");
   }
 
   //It doesn't look like they've chose a specific one, so choose the correct one by deploy env
   return `${BASE_URL}`.search('local.virtru.com') >= 0 ? 'develop01' : 'production';
+}
+
+function getSDKUrl(){
+  const envs = getEndpointsByEnvironment();
+  return envs['sdkUrlBase'];
 }
 
 //Add required endpoint selections given the correct environment
@@ -51,18 +56,21 @@ function getEndpointsByEnvironment(){
       "kasEndpoint": "https://api-develop01.develop.virtru.com/kas",
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
+      "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
     },
     "staging": {
       "stage": "staging",
       "kasEndpoint": "https://api.staging.virtru.com/kas",
       "acmEndpoint": "https://acm.staging.virtru.com",
       "easEndpoint": "https://accounts.staging.virtru.com",
+      "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
     },
     "production": {
       "stage": "production",
       "kasEndpoint": "https://api.virtru.com/kas",
       "acmEndpoint": "https://acm.virtru.com",
       "easEndpoint": "https://accounts.virtru.com",
+      "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
     }
   };
 
@@ -176,4 +184,8 @@ async function skipLoginIfPossible(authType){
 
 if(!isSupportedBrowser()){
   window.location.href = `${BASE_URL}incompatible-browser.html`;
+}
+
+if((importEl = getById('sdkimport'))){
+  importEl.src = getSDKUrl();
 }
