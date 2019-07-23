@@ -52,57 +52,84 @@ function getEndpointsByEnvironment(){
   const env = getEnvironmentString();
 
   const envs = {
-    "develop01": {
+    "local": {
       "stage": "develop01",
+      "apiEndpoint": "https://api-develop01.develop.virtru.com",
       "kasEndpoint": "https://api-develop01.develop.virtru.com/kas",
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
+      "eventsEndpoint": "https://events-develop01.develop.virtru.com",
+      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "sdkUrlBase":  "/js/virtru-tdf3-js.min.js"
+    },
+    "develop01": {
+      "stage": "develop01",
+      "apiEndpoint": "https://api-develop01.develop.virtru.com",
+      "kasEndpoint": "https://api-develop01.develop.virtru.com/kas",
+      "acmEndpoint": "https://acm-develop01.develop.virtru.com",
+      "easEndpoint": "https://accounts-develop01.develop.virtru.com",
+      "eventsEndpoint": "https://events-develop01.develop.virtru.com",
+      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
       "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
     },
     "staging": {
       "stage": "staging",
+      "apiEndpoint": "https://api.staging.virtru.com",
       "kasEndpoint": "https://api.staging.virtru.com/kas",
       "acmEndpoint": "https://acm.staging.virtru.com",
       "easEndpoint": "https://accounts.staging.virtru.com",
+      "eventsEndpoint": "https://events.staging.virtru.com",
+      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
       "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
     },
     "production": {
       "stage": "production",
+      "apiEndpoint": "https://api.virtru.com",
       "kasEndpoint": "https://api.virtru.com/kas",
       "acmEndpoint": "https://acm.virtru.com",
       "easEndpoint": "https://accounts.virtru.com",
+      "eventsEndpoint": "https://events.virtru.com",
+      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
       "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
     }
   };
-
   return envs[env] || envs['production'];
 }
 
 //Support function for returning the correct AuthProvider given a type string
 function chooseAuthProviderByType(opts){
+  // Reconfigure the proxy
+  configureProxy(endpoints.proxyEndpoint);
   
   const user = getUser();
   const redirectUrl = opts.redirectUrl;
   const type = opts.type;
   const appid = opts.appId;
 
-  const defaultAuth = new Virtru.Client.AuthProviders.GoogleAuthProvider(user, redirectUrl, environment);
+  const authEndpoints = {
+    accountsUrl: endpoints.easEndpoint,
+    acmUrl: endpoints.acmEndpoint,
+    apiUrl: endpoints.apiEndpoint,
+    eventsUrl: endpoints.eventsEndpoint
+  };
+
+  const defaultAuth = new Virtru.Auth.Providers.GoogleAuthProvider({ email: user, redirectUrl, ...authEndpoints });
 
   switch(type){
     case 'google':
       return defaultAuth
     case 'o365':
-      return new Virtru.Client.AuthProviders.O365AuthProvider(user, redirectUrl, environment);
+      return new Virtru.Auth.Providers.O365AuthProvider({ email: user, redirectUrl, ...authEndpoints });
     case 'email-code':
-      return new Virtru.Client.AuthProviders.EmailCodeAuthProvider(user, opts.code, redirectUrl, environment);
+      return new Virtru.Auth.Providers.EmailCodeAuthProvider({ email: user, code: opts.code, redirectUrl, ...authEndpoints });
     case 'email':
-      return new Virtru.Client.AuthProviders.EmailCodeAuthProvider(user, '1234', '', environment);
+      return new Virtru.Auth.Providers.EmailCodeAuthProvider({ email: user, code: '1234', redirectUrl: '', ...authEndpoints });
     case 'email-static':
       return Virtru.Client.AuthProviders.EmailCodeAuthProvider;
     case 'static':
-      return new Virtru.Client.AuthProviders.StaticAuthProvider(appid);
+      return new Virtru.Auth.Providers.StaticAuthProvider(appid);
     case 'outlook':
-      return new Virtru.Client.AuthProviders.OutlookAuthProvider(user, redirectUrl, environment);
+      return new Virtru.Auth.Providers.OutlookAuthProvider({ email: user, redirectUrl, ...authEndpoints });
     default:
       return defaultAuth
   }
@@ -110,7 +137,7 @@ function chooseAuthProviderByType(opts){
 
 //Convenience function to initialize an auth client
 function initAuthClient(){
-    oauthClient = oauthClient || Virtru.Auth.init({
+    oauthClient = oauthClient || Virtru.OAuth.init({
       userId: getUser(), 
       environment,
       platform: 'aodocs'
@@ -119,15 +146,17 @@ function initAuthClient(){
 
 //Builds a new client (if needed)
 function buildClient(){
+  // Reconfigure the proxy
+  configureProxy(endpoints.proxyEndpoint);
   if(!client){
 
     const {acmEndpoint, kasEndpoint, easEndpoint} = getEndpointsByEnvironment();
     const authType = getAuthType();
     const appId = getAppId();
 
-    const provider = chooseAuthProviderByType({type: authType, redirectUrl: '', appId});
+    const provider = chooseAuthProviderByType({ type: authType, redirectUrl: '', appId});
 
-    client = new Virtru.Client.VirtruClient({
+    client = new Virtru.Client({
       acmEndpoint, kasEndpoint, easEndpoint,
       authProvider: provider
     });
@@ -198,4 +227,13 @@ if(!isSupportedBrowser()){
 
 if((importEl = getById('sdkimport'))){
   importEl.src = getSDKUrl();
+}
+
+// Configure the proxy
+function configureProxy(proxyUrl) {
+  if (Virtru && Virtru.XHRProxy) {
+    Virtru.XHRProxy.useProxyIfBrowser(proxyUrl, [
+      endpoints.apiEndpoint, endpoints.acmEndpoint, endpoints.easEndpoint
+    ]);
+  }
 }
