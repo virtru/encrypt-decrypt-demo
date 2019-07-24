@@ -70,7 +70,7 @@ function getEndpointsByEnvironment(){
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
       "eventsEndpoint": "https://events-develop01.develop.virtru.com",
       "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
-      "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
+      "sdkUrlBase":  "https://sdk-develop01.develop.virtru.com/js/latest/virtru-sdk.min.js"
     },
     "staging": {
       "stage": "staging",
@@ -80,7 +80,7 @@ function getEndpointsByEnvironment(){
       "easEndpoint": "https://accounts.staging.virtru.com",
       "eventsEndpoint": "https://events.staging.virtru.com",
       "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
-      "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
+      "sdkUrlBase":  "https://sdk.staging.virtru.com/js/latest/virtru-sdk.min.js"
     },
     "production": {
       "stage": "production",
@@ -90,7 +90,7 @@ function getEndpointsByEnvironment(){
       "easEndpoint": "https://accounts.virtru.com",
       "eventsEndpoint": "https://events.virtru.com",
       "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
-      "sdkUrlBase":  "https://sdk.virtru.com/js/0.3.7/virtru-sdk.min.js"
+      "sdkUrlBase":  "https://sdk.virtru.com/js/latest/virtru-sdk.min.js"
     }
   };
   return envs[env] || envs['production'];
