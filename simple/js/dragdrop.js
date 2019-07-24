@@ -55,6 +55,7 @@ function processFile(fileOb, completion){
     try{
         await encryptOrDecryptFile(reader.result, filename, shouldEncrypt, getUser(), completion, isHtmlProtocol());
     }catch(e){
+      console.error(e);
         if(!shouldEncrypt){
             alert('An error occurred attempting to decrypt this file. Please be sure you have access to do so.'); 
         }else{

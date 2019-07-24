@@ -18,9 +18,9 @@ async function encrypt(fileData, filename, userId, asHtml) {
   
   client = buildClient();
   const contentStream = TDF.createMockStream(fileData);
-  const policy = new Virtru.Client.VirtruPolicyBuilder().build();
+  const policy = new Virtru.PolicyBuilder().build();
 
-  const encryptParams = new Virtru.Client.VirtruEncryptParamsBuilder()
+  const encryptParams = new Virtru.EncryptParamsBuilder()
       .withStreamSource(contentStream)
       .withPolicy(policy)
       .withDisplayFilename(filename)
@@ -36,7 +36,7 @@ async function encrypt(fileData, filename, userId, asHtml) {
 async function decrypt(filedata, userId, asHtml) {
 
  client = buildClient();
- const decryptParams = new Virtru.Client.VirtruDecryptParamsBuilder()
+ const decryptParams = new Virtru.DecryptParamsBuilder()
       .withBufferSource(filedata)
       .build();
 

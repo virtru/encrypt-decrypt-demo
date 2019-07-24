@@ -68,7 +68,7 @@ const engageActivateCode = async () => {
 const engageEmailLogin = async () => {
   showLoading();
   authType = 'email';
-  await chooseAuthProviderByType({type: 'email-static', redirectUrl: buildRedirectUrl()}).sendCodeToEmail(email, environment);
+  await chooseAuthProviderByType({type: 'email-static', redirectUrl: buildRedirectUrl()}).sendCodeToEmail({ email });
 
   codeAuthElement.innerHTML = `
           <h2 class="login-instruction">Your code has been sent. Please check your email and enter it below.</h2>
