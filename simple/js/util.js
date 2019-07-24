@@ -4,6 +4,7 @@ const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id)
 const getUser = () => getQueryParam('userId');
 const getEnvParam = () => getQueryParam('env');
 const getAuthType = () => getQueryParam('authType');
+const getAppId = () => getQueryParam('appId');
 const environment = getEnvironmentString();
 const endpoints = getEndpointsByEnvironment();
 
@@ -14,10 +15,10 @@ const isSupportedBrowser = () => {
   const supportedBrowserStrings = ["Chrome", "Firefox"];
   let supported = false;
   supportedBrowserStrings.forEach((browser) => {
-  	if(navigator.userAgent.search(browser) >= 0){
-  		supported=true;
-  		return;
-  	}
+    if(navigator.userAgent.search(browser) >= 0){
+      supported=true;
+      return;
+    }
   });
 
   return supported;
@@ -83,6 +84,7 @@ function chooseAuthProviderByType(opts){
   const user = getUser();
   const redirectUrl = opts.redirectUrl;
   const type = opts.type;
+  const appid = opts.appId;
 
   const defaultAuth = new Virtru.Client.AuthProviders.GoogleAuthProvider(user, redirectUrl, environment);
 
@@ -97,6 +99,8 @@ function chooseAuthProviderByType(opts){
       return new Virtru.Client.AuthProviders.EmailCodeAuthProvider(user, '1234', '', environment);
     case 'email-static':
       return Virtru.Client.AuthProviders.EmailCodeAuthProvider;
+    case 'static':
+      return new Virtru.Client.AuthProviders.StaticAuthProvider(appid);
     case 'outlook':
       return new Virtru.Client.AuthProviders.OutlookAuthProvider(user, redirectUrl, environment);
     default:
@@ -119,7 +123,9 @@ function buildClient(){
 
     const {acmEndpoint, kasEndpoint, easEndpoint} = getEndpointsByEnvironment();
     const authType = getAuthType();
-    const provider = chooseAuthProviderByType({type: authType, redirectUrl: ''});
+    const appId = getAppId();
+
+    const provider = chooseAuthProviderByType({type: authType, redirectUrl: '', appId});
 
     client = new Virtru.Client.VirtruClient({
       acmEndpoint, kasEndpoint, easEndpoint,
@@ -164,6 +170,10 @@ function logout(){
 
 //Redirect the user if they don't have a current, valid saved appIdBundle
 function forceLoginIfNecessary(){
+
+  if(getAuthType() === 'static'){
+    return;
+  }
 
   //Use traditional promises as this function needs to be called by non-async functions
   isAppIdStillValid().then((valid)=>{
