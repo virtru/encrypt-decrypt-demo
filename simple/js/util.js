@@ -171,7 +171,9 @@ function logout(){
 //Redirect the user if they don't have a current, valid saved appIdBundle
 function forceLoginIfNecessary(){
 
-  if(getAuthType() === 'static') return;
+  if(getAuthType() === 'static'){
+    return;
+  }
 
   //Use traditional promises as this function needs to be called by non-async functions
   isAppIdStillValid().then((valid)=>{
