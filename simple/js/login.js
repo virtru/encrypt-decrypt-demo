@@ -19,21 +19,21 @@ const buildRedirectUrl = () => {
 const loginUsingOutlook = async () => {
   authType='outlook';
   await skipLoginIfPossible(authType);
-  await chooseAuthProviderByType({type: authType, redirectUrl: buildRedirectUrl()})._initAuthForProvider();
+  await Virtru.Auth.loginWithOutlook({email: getUser(), redirectUrl: buildRedirectUrl()});
 };
 
 //Log in the user using Google OAuth
 const loginUsingGoogle = async () => {
   authType='google';
   await skipLoginIfPossible(authType);
-  await chooseAuthProviderByType({type: authType, redirectUrl: buildRedirectUrl()})._initAuthForProvider();
+  await Virtru.Auth.loginWithGoogle({email: getUser(), redirectUrl: buildRedirectUrl()});
 };
 
 //Log in the user using Office365
 const loginUsingOffice365 = async () => {
   authType='o365';
   await skipLoginIfPossible(authType);
-  await chooseAuthProviderByType({type: authType, redirectUrl: buildRedirectUrl()})._initAuthForProvider();
+  await Virtru.Auth.loginWithOffice365({email: getUser(), redirectUrl: buildRedirectUrl()});
 };
 
 //Show the loading spinner
@@ -55,7 +55,7 @@ const engageActivateCode = async () => {
 
   code = code.replace('V-','');
   showLoading();
-  await chooseAuthProviderByType({type: 'email-code', redirectUrl: buildRedirectUrl(), code})._initAuthForProvider();
+  await Virtru.Auth.activateEmailCode({email: getUser(), code, redirectUrl: buildRedirectUrl()});
 
   codeAuthElement.innerHTML = `
         <h2 class="login-instruction">You have been successfully authenticated!</h2>
@@ -68,7 +68,7 @@ const engageActivateCode = async () => {
 const engageEmailLogin = async () => {
   showLoading();
   authType = 'email';
-  await chooseAuthProviderByType({type: 'email-static', redirectUrl: buildRedirectUrl()}).sendCodeToEmail({ email });
+  await Virtru.Auth.sendCodeToEmail({email: getUser()});
 
   codeAuthElement.innerHTML = `
           <h2 class="login-instruction">Your code has been sent. Please check your email and enter it below.</h2>
