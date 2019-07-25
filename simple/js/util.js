@@ -59,7 +59,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
       "eventsEndpoint": "https://events-develop01.develop.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk-develop01.develop.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "/js/virtru-tdf3-js.min.js"
     },
     "develop01": {
@@ -69,7 +69,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
       "eventsEndpoint": "https://events-develop01.develop.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk-develop01.develop.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "https://sdk-develop01.develop.virtru.com/js/latest/virtru-sdk.min.js"
     },
     "staging": {
@@ -79,7 +79,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm.staging.virtru.com",
       "easEndpoint": "https://accounts.staging.virtru.com",
       "eventsEndpoint": "https://events.staging.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk.staging.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "https://sdk.staging.virtru.com/js/latest/virtru-sdk.min.js"
     },
     "production": {
@@ -89,7 +89,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm.virtru.com",
       "easEndpoint": "https://accounts.virtru.com",
       "eventsEndpoint": "https://events.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "https://sdk.virtru.com/js/latest/virtru-sdk.min.js"
     }
   };
@@ -98,8 +98,6 @@ function getEndpointsByEnvironment(){
 
 //Support function for returning the correct AuthProvider given a type string
 function chooseAuthProviderByType(opts){
-  // Reconfigure the proxy
-  configureProxy(endpoints.proxyEndpoint);
   
   const user = getUser();
   const redirectUrl = opts.redirectUrl;
@@ -237,3 +235,40 @@ function configureProxy(proxyUrl) {
     ]);
   }
 }
+
+const virtruInitQueue = [];
+let virtruInitalized = false;
+function initializeOnVirtru (callback) {
+  if (!virtruInitalized) {
+    // add to queue
+    virtruInitQueue.push(callback);
+  } else {
+    callback.call();
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function initalize(callback) {
+  const maxTries = 100;
+  const timeout = 100;
+  let tries = 0;
+  function checkOnVirtru() {
+    if (window.Virtru && window.Virtru.OAuth) {
+      console.log('Initialize Virtru Proxy')
+      // Configure the proxy
+      buildClient();
+      // set as initalized
+      virtruInitalized = true;
+      // fire off queue
+      virtruInitQueue.forEach(function execQueue(item) {
+        if (typeof item === 'function') {
+          item.call()
+        }
+      });
+    } else if (tries++ < maxTries) {
+      setTimeout(checkOnVirtru, timeout);
+    } else {
+      alert('Virtru was not initalized');
+    }
+  }
+  checkOnVirtru();
+});

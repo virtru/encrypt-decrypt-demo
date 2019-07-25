@@ -500,5 +500,5 @@ function init(){
   setupFileInputs();
 }
 
-init();
+initializeOnVirtru(init);
 
