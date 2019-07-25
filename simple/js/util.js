@@ -59,7 +59,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
       "eventsEndpoint": "https://events-develop01.develop.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk-develop01.develop.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "/js/virtru-tdf3-js.min.js"
     },
     "develop01": {
@@ -69,7 +69,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm-develop01.develop.virtru.com",
       "easEndpoint": "https://accounts-develop01.develop.virtru.com",
       "eventsEndpoint": "https://events-develop01.develop.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk-develop01.develop.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "https://sdk-develop01.develop.virtru.com/js/latest/virtru-sdk.min.js"
     },
     "staging": {
@@ -79,7 +79,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm.staging.virtru.com",
       "easEndpoint": "https://accounts.staging.virtru.com",
       "eventsEndpoint": "https://events.staging.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk.staging.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "https://sdk.staging.virtru.com/js/latest/virtru-sdk.min.js"
     },
     "production": {
@@ -89,7 +89,7 @@ function getEndpointsByEnvironment(){
       "acmEndpoint": "https://acm.virtru.com",
       "easEndpoint": "https://accounts.virtru.com",
       "eventsEndpoint": "https://events.virtru.com",
-      "proxyEndpoint": "https://apps-develop01.develop.virtru.com/test-zack/proxy.html",
+      "proxyEndpoint": "https://sdk.virtru.com/js/latest/proxy.html",
       "sdkUrlBase":  "https://sdk.virtru.com/js/latest/virtru-sdk.min.js"
     }
   };
