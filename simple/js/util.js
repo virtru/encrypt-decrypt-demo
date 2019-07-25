@@ -98,8 +98,6 @@ function getEndpointsByEnvironment(){
 
 //Support function for returning the correct AuthProvider given a type string
 function chooseAuthProviderByType(opts){
-  // Reconfigure the proxy
-  configureProxy(endpoints.proxyEndpoint);
   
   const user = getUser();
   const redirectUrl = opts.redirectUrl;
@@ -237,3 +235,40 @@ function configureProxy(proxyUrl) {
     ]);
   }
 }
+
+const virtruInitQueue = [];
+let virtruInitalized = false;
+function initializeOnVirtru (callback) {
+  if (!virtruInitalized) {
+    // add to queue
+    virtruInitQueue.push(callback);
+  } else {
+    callback.call();
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function initalize(callback) {
+  const maxTries = 100;
+  const timeout = 100;
+  let tries = 0;
+  function checkOnVirtru() {
+    if (window.Virtru && window.Virtru.OAuth) {
+      console.log('Initialize Virtru Proxy')
+      // Configure the proxy
+      buildClient();
+      // set as initalized
+      virtruInitalized = true;
+      // fire off queue
+      virtruInitQueue.forEach(function execQueue(item) {
+        if (typeof item === 'function') {
+          item.call()
+        }
+      });
+    } else if (tries++ < maxTries) {
+      setTimeout(checkOnVirtru, timeout);
+    } else {
+      alert('Virtru was not initalized');
+    }
+  }
+  checkOnVirtru();
+});

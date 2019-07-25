@@ -84,3 +84,5 @@ getById('outlookbutton').addEventListener('click', () => loginUsingOutlook());
 getById('office365button').addEventListener('click', () => loginUsingOffice365());
 getById('sendcodebutton').addEventListener('click', engageEmailLogin);
 getById('sendcodebutton').value = `Send Code to ${email.substring(0, 15)}...`;
+
+initializeOnVirtru();
