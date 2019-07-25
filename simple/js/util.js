@@ -137,7 +137,6 @@ function chooseAuthProviderByType(opts){
 function initAuthClient(){
     oauthClient = oauthClient || Virtru.OAuth.init({
       userId: getUser(), 
-      environment,
       platform: 'aodocs'
     });
 }
