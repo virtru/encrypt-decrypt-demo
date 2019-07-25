@@ -13,7 +13,6 @@ const removeUserButton = getById('removeUserButton');
 const addUserButton = getById('addUserButton');
 const moreButton = getById('moreButton');
 const addUserInput = getById('addUserInput');
-const enableOneClickInput = getById('checkOneClickEnabled');
 const disableReshareInput = getById('checkReshareDisabled');
 const enableExpirationInput = getById('checkExpirationEnabled');
 const datePicker = getById('datepicker');
@@ -301,11 +300,7 @@ function initializeDatePicker(){
     }
 }
 
-//Initialize the one-click checkbox with what's in the fetched policy (if one exists)
-function initializeOneClickCheckbox(){
-    const oneClickPresent = fetchedPolicy && fetchedPolicy.hasOneClick();
-    checkOneClickEnabled.checked = oneClickPresent;
-}
+
 
 //Initialize the reshare checkbox with what's in the fetched policy (if one exists)
 function initializeReshareClickCheckbox(){
@@ -340,19 +335,6 @@ function toggleDatePicker(){
     datePicker.disabled = !checkExpirationEnabled.checked;
 }
 
-//UI function
-function toggleOneClickCheckbox(enabled){
-    checkOneClickEnabled.disabled = !enabled;
-    document.addEventListener('click',()=>{
-        if(fetchedPolicy){
-            if(checkOneClickEnabled.checked) {
-                fetchedPolicyBuilder.enableOneClick();
-            }else{
-                fetchedPolicyBuilder.disableOneClick();
-            }
-        }
-    });   
-}
 
 //UI function
 function toggleReshareCheckbox(enabled){
@@ -383,11 +365,9 @@ function togglePolicyElements(enabled){
   toggleAddUserButton(enabled);
   toggleAddUserInput(enabled);
   toggleUserList(enabled);
-  toggleOneClickCheckbox(enabled);
   toggleReshareCheckbox(enabled);
   toggleExpirationCheckbox(enabled);
   initializeDatePicker();
-  initializeOneClickCheckbox();
   initializeReshareClickCheckbox();
   initializeMoreButton();
 };
