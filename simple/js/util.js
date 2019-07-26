@@ -96,6 +96,16 @@ function getEndpointsByEnvironment(){
   return envs[env] || envs['production'];
 }
 
+function authUrls() {
+  const endpoints = getEndpointsByEnvironment();
+  return {
+    accountsUrl: endpoints.easEndpoint,
+    acmUrl: endpoints.acmEndpoint,
+    apiUrl: endpoints.apiEndpoint,
+    eventsUrl: endpoints.eventsEndpoint
+  };
+}
+
 //Support function for returning the correct AuthProvider given a type string
 function chooseAuthProviderByType(opts){
   
