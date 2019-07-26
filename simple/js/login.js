@@ -18,21 +18,18 @@ const buildRedirectUrl = () => {
 //Log in the user using Outlook OAuth
 const loginUsingOutlook = async () => {
   authType='outlook';
-  // await skipLoginIfPossible(authType);
   await Virtru.Auth.loginWithOutlook({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
 };
 
 //Log in the user using Google OAuth
 const loginUsingGoogle = async () => {
   authType='google';
-  // await skipLoginIfPossible(authType);
   await Virtru.Auth.loginWithGoogle({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
 };
 
 //Log in the user using Office365
 const loginUsingOffice365 = async () => {
   authType='o365';
-  // await skipLoginIfPossible(authType);
   await Virtru.Auth.loginWithOffice365({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
 };
 
