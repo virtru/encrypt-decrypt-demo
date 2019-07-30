@@ -3,34 +3,33 @@ const codeAuthElement = getById('codeauth');
 
 let authType;
 
+const virtruSessionKey = 'virtru-client-auth';
+if (localStorage.getItem(virtruSessionKey) !== null) {
+  localStorage.removeItem(virtruSessionKey);
+}
+
 //construct a redirect url needed for the demo
 const buildRedirectUrl = () => {
   type = authType || 'email';
-  let redirectUrl = `${BASE_URL}dragdrop.html?userId=${email}&authType=${type}`;
-
-  const envParam = getEnvParam();
-  if(envParam){
-    redirectUrl += `&env=${envParam}`;
-  }
-  return redirectUrl;
+  return `${BASE_URL}dragdrop.html?userId=${email}&authType=${type}`;
 };
 
 //Log in the user using Outlook OAuth
 const loginUsingOutlook = async () => {
   authType='outlook';
-  await Virtru.Auth.loginWithOutlook({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
+  await Virtru.Auth.loginWithOutlook({email: getUser(), redirectUrl: buildRedirectUrl()});
 };
 
 //Log in the user using Google OAuth
 const loginUsingGoogle = async () => {
   authType='google';
-  await Virtru.Auth.loginWithGoogle({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
+  await Virtru.Auth.loginWithGoogle({email: getUser(), redirectUrl: buildRedirectUrl()});
 };
 
 //Log in the user using Office365
 const loginUsingOffice365 = async () => {
   authType='o365';
-  await Virtru.Auth.loginWithOffice365({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
+  await Virtru.Auth.loginWithOffice365({email: getUser(), redirectUrl: buildRedirectUrl()});
 };
 
 //Show the loading spinner
@@ -52,7 +51,7 @@ const engageActivateCode = async () => {
 
   code = code.replace('V-','');
   showLoading();
-  await Virtru.Auth.activateEmailCode({email: getUser(), code, redirectUrl: buildRedirectUrl(), ...authUrls()});
+  await Virtru.Auth.activateEmailCode({email: getUser(), code, redirectUrl: buildRedirectUrl()});
 
   codeAuthElement.innerHTML = `
         <h2 class="login-instruction">You have been successfully authenticated!</h2>
