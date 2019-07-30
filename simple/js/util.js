@@ -27,6 +27,7 @@ function emailActivationUsed(){
 }
 
 //Support function for returning the correct AuthProvider given a type string
+/*
 function chooseAuthProviderByType(opts){
   
   const user = getUser();
@@ -55,6 +56,7 @@ function chooseAuthProviderByType(opts){
       return defaultAuth
   }
 }
+*/
 
 //Convenience function to initialize an auth client
 function initAuthClient(){
@@ -64,27 +66,42 @@ function initAuthClient(){
     });
 }
 
+
 //Builds a new client (if needed)
 function buildClient(){
   if(!client){
     const type = getAuthType();
     const appId = getAppId();
-    const authProvider = chooseAuthProviderByType({ type, redirectUrl: '', appId});
-
-    // TODO: Fix virtru-tdf3-js and tdf3-js to use prod domains as default
-    const endpoints = {
-      "kasEndpoint": "https://api.virtru.com/kas",
-      "acmEndpoint": "https://acm.virtru.com",
-      "easEndpoint": "https://accounts.virtru.com"
-    };
+    const endpoints = getEndpoints();
 
     client = new Virtru.Client({
-      easEndpoint: endpoints.easEndpoint, kasEndpoint: endpoints.kasEndpoint, acmEndpoint: endpoints.acmEndpoint,
-      authProvider
+      email: getUser(),
+      easEndpoint: endpoints.easEndpoint, 
+      kasEndpoint: endpoints.kasEndpoint, 
+      acmEndpoint: endpoints.acmEndpoint
     });
   }
 
   return client;
+}
+
+
+function getEndpoints(){
+  return {
+    "kasEndpoint": "https://api.virtru.com/kas",
+    "acmEndpoint": "https://acm.virtru.com",
+    "easEndpoint": "https://accounts.virtru.com"
+  };
+}
+
+function authUrls() {
+  const endpoints = getEndpoints();
+  return {
+    accountsUrl: endpoints.easEndpoint,
+    acmUrl: endpoints.acmEndpoint,
+    apiUrl: endpoints.apiEndpoint,
+    eventsUrl: endpoints.eventsEndpoint
+  };
 }
 
 //Ensure the user is logged in and has a valid id saved. Otherwise, forward to index
