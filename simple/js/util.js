@@ -4,6 +4,11 @@ const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id)
 const getUser = () => getQueryParam('userId');
 const getAuthType = () => getQueryParam('authType');
 const getAppId = () => getQueryParam('appId');
+const getAcmUrl = () => getQueryParam('acmUrl');
+const getKasUrl = () => getQueryParam('kasUrl');
+const getEasUrl = () => getQueryParam('easUrl');
+const getApiUrl = () => getQueryParam('apiUrl');
+
 let client, oauthClient;
 
 
@@ -26,43 +31,15 @@ function emailActivationUsed(){
   return method && method.toLowerCase() === 'email';
 }
 
-//Support function for returning the correct AuthProvider given a type string
-/*
-function chooseAuthProviderByType(opts){
-  
-  const user = getUser();
-  const redirectUrl = opts.redirectUrl;
-  const type = opts.type;
-  const appid = opts.appId;
-
-  const defaultAuth = new Virtru.Auth.Providers.GoogleAuthProvider({ email: user, redirectUrl });
-
-  switch(type){
-    case 'google':
-      return defaultAuth
-    case 'o365':
-      return new Virtru.Auth.Providers.O365AuthProvider({ email: user, redirectUrl });
-    case 'email-code':
-      return new Virtru.Auth.Providers.EmailCodeAuthProvider({ email: user, code: opts.code, redirectUrl });
-    case 'email':
-      return new Virtru.Auth.Providers.EmailCodeAuthProvider({ email: user, code: '1234', redirectUrl: '' });
-    case 'email-static':
-      return Virtru.Client.AuthProviders.EmailCodeAuthProvider;
-    case 'static':
-      return new Virtru.Auth.Providers.StaticAuthProvider(appid);
-    case 'outlook':
-      return new Virtru.Auth.Providers.OutlookAuthProvider({ email: user, redirectUrl });
-    default:
-      return defaultAuth
-  }
-}
-*/
-
 //Convenience function to initialize an auth client
 function initAuthClient(){
+    const endpoints = getEndpoints();
     oauthClient = oauthClient || Virtru.OAuth.init({
       userId: getUser(), 
-      platform: 'aodocs'
+      platform: 'aodocs',
+      apiUrl: endpoints.apiEndpoint,
+      accountsUrl: easEndpoint.easEndpoint,
+      acmUrl: acmEndpoint
     });
 }
 
@@ -73,12 +50,17 @@ function buildClient(){
     const type = getAuthType();
     const appId = getAppId();
     const endpoints = getEndpoints();
+    const easEndpoint = getEasUrl();
+    const kasEndpoint = getKasUrl();
+    const acmEndpoint = getAcmUrl();
+
+    console.log("Initializing with ", easEndpoint || endpoints.easEndpoint);
 
     client = new Virtru.Client({
       email: getUser(),
-      easEndpoint: endpoints.easEndpoint, 
-      kasEndpoint: endpoints.kasEndpoint, 
-      acmEndpoint: endpoints.acmEndpoint
+      easEndpoint: "https://accounts-develop01.develop.virtru.com", //easEndpoint || endpoints.easEndpoint, 
+      kasEndpoint: "https://api-develop01.develop.virtru.com/kas", //kasEndpoint || endpoints.kasEndpoint, 
+      acmEndpoint: "https://acm-develop01.develop.virtru.com"//acmEndpoint || endpoints.acmEndpoint
     });
   }
 
@@ -90,18 +72,27 @@ function getEndpoints(){
   return {
     "kasEndpoint": "https://api.virtru.com/kas",
     "acmEndpoint": "https://acm.virtru.com",
-    "easEndpoint": "https://accounts.virtru.com"
+    "easEndpoint": "https://accounts.virtru.com",
+    "apiEndpoint": "https://api.virtru.com"
   };
 }
 
 function authUrls() {
   const endpoints = getEndpoints();
-  return {
-    accountsUrl: endpoints.easEndpoint,
-    acmUrl: endpoints.acmEndpoint,
-    apiUrl: endpoints.apiEndpoint,
-    eventsUrl: endpoints.eventsEndpoint
+  const easEndpoint = getEasUrl();
+  const kasEndpoint = getKasUrl();
+  const acmEndpoint = getAcmUrl();
+  const apiEndpoint = getApiUrl();
+
+  const urls = {
+    accountsUrl: "https://accounts-develop01.develop.virtru.com", //easEndpoint || endpoints.easEndpoint,
+    acmUrl: "https://acm-develop01.develop.virtru.com", //acmEndpoint || endpoints.acmEndpoint,
+    apiUrl: "https://api-develop01.develop.virtru.com",//apiEndpoint || endpoints.apiEndpoint
   };
+
+  console.log('Auth urls: ', urls);
+
+  return urls;
 }
 
 //Ensure the user is logged in and has a valid id saved. Otherwise, forward to index
@@ -175,13 +166,14 @@ function initializeOnVirtru (callback) {
   }
 }
 
+
 window.addEventListener('DOMContentLoaded', function initalize(callback) {
   const maxTries = 100;
   const timeout = 100;
   let tries = 0;
   function checkOnVirtru() {
     if (window.Virtru && window.Virtru.OAuth) {
-      console.log('Initialize Virtru Proxy')
+      console.log('Initializing Virtru Proxy..')
       // set as initalized
       virtruInitalized = true;
       // fire off queue
@@ -190,10 +182,13 @@ window.addEventListener('DOMContentLoaded', function initalize(callback) {
           item.call()
         }
       });
+
+      console.log("Initialization complete");
+
     } else if (tries++ < maxTries) {
       setTimeout(checkOnVirtru, timeout);
     } else {
-      console.error('Virtru was not initalized');
+      console.error('Virtru was not initialized');
     }
   }
   checkOnVirtru();

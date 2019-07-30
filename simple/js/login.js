@@ -17,19 +17,19 @@ const buildRedirectUrl = () => {
 //Log in the user using Outlook OAuth
 const loginUsingOutlook = async () => {
   authType='outlook';
-  await Virtru.Auth.loginWithOutlook({email: getUser(), redirectUrl: buildRedirectUrl()});
+  await Virtru.Auth.loginWithOutlook({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
 };
 
 //Log in the user using Google OAuth
 const loginUsingGoogle = async () => {
   authType='google';
-  await Virtru.Auth.loginWithGoogle({email: getUser(), redirectUrl: buildRedirectUrl()});
+  await Virtru.Auth.loginWithGoogle({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
 };
 
 //Log in the user using Office365
 const loginUsingOffice365 = async () => {
   authType='o365';
-  await Virtru.Auth.loginWithOffice365({email: getUser(), redirectUrl: buildRedirectUrl()});
+  await Virtru.Auth.loginWithOffice365({email: getUser(), redirectUrl: buildRedirectUrl(), ...authUrls()});
 };
 
 //Show the loading spinner
@@ -51,7 +51,7 @@ const engageActivateCode = async () => {
 
   code = code.replace('V-','');
   showLoading();
-  await Virtru.Auth.activateEmailCode({email: getUser(), code, redirectUrl: buildRedirectUrl()});
+  await Virtru.Auth.activateEmailCode({email: getUser(), code, redirectUrl: buildRedirectUrl(), ...authUrls()});
 
   codeAuthElement.innerHTML = `
         <h2 class="login-instruction">You have been successfully authenticated!</h2>
