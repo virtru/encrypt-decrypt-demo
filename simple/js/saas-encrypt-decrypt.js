@@ -59,30 +59,9 @@ function buildDecryptFilename(filename){
     finalFilename = finalFilename.replace(ext,"");
   }
 
-  const tdfTrimmed = finalFilename;
+  finalFilename = finalFilename.replace(/\([^.]*\)$/, '');
 
-  const split = finalFilename.split(".");
-
-  if(finalFilename.substr(-1) === ')'){
-    const start = finalFilename.lastIndexOf('.');
-
-    let end = start;
-
-    for(let i = start; i < finalFilename.length; i++){
-      if(finalFilename.charAt(i) == '('){
-        end=i;
-        break;
-      }
-    }
-
-    finalFilename = finalFilename.substring(start, end);
-  }
-
-  if(tdfTrimmed !== finalFilename){
-    return tdfTrimmed+finalFilename;
-  }
-
-  return tdfTrimmed;
+  return finalFilename;
 }
 
 //Encrypt or decrypt the file by using the support functions, depending on the value of the shouldEncrypt flag
