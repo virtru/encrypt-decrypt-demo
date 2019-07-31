@@ -61,8 +61,8 @@ function buildClient(){
 function getEndpoints(){
   return {
     "kasEndpoint": "https://api.virtru.com/kas",
-    "acmEndpoint": "https://acm.virtru.com",
-    "easEndpoint": "https://accounts.virtru.com",
+    "acmEndpoint": "https://api.virtru.com/acm",
+    "easEndpoint": "https://api.virtru.com/accounts",
     "apiEndpoint": "https://api.virtru.com"
   };
 }
