@@ -123,7 +123,7 @@ function removeUserFromList(){
 //Removes the selected user from the policy in-memory
 function removeUser(){
   const userToRemove = userList.value;
-  fetchedPolicyBuilder.removeUsers(userToRemove);
+  fetchedPolicyBuilder.removeUsersWithAccess(userToRemove);
   removeUserFromList(userToRemove);
 };
 
@@ -135,7 +135,7 @@ function addUser(){
     alert('You must provide an email address of a user to add to the policy');
     return;
   }
-  fetchedPolicyBuilder.addUsers(userToAdd);
+  fetchedPolicyBuilder.addUsersWithAccess(userToAdd);
   addUserToList(userToAdd);
   toggleRemoveUserButton(true);
   addUserInput.value = '';
@@ -186,7 +186,7 @@ function handleFileViewer(evt){
         fetchedPolicy = await fetchPolicy(uuid);
         fetchedPolicyBuilder = fetchedPolicy.builder();
         togglePolicyElements(true);
-        populateUserList(fetchedPolicy.getUsers());
+        populateUserList(fetchedPolicy.getUsersWithAccess());
         getById('editingPolicyText').innerHTML = `Editing Policy...`;
     }catch(e){
         alert('An error occurred in trying to read this policy. Please be sure you are the policy owner.');
@@ -480,5 +480,5 @@ function init(){
   setupFileInputs();
 }
 
-initializeOnVirtru(init);
+init();
 

@@ -3,16 +3,15 @@ const codeAuthElement = getById('codeauth');
 
 let authType;
 
+const virtruSessionKey = 'virtru-client-auth';
+if (localStorage.getItem(virtruSessionKey) !== null) {
+  localStorage.removeItem(virtruSessionKey);
+}
+
 //construct a redirect url needed for the demo
 const buildRedirectUrl = () => {
   type = authType || 'email';
-  let redirectUrl = `${BASE_URL}dragdrop.html?userId=${email}&authType=${type}`;
-
-  const envParam = getEnvParam();
-  if(envParam){
-    redirectUrl += `&env=${envParam}`;
-  }
-  return redirectUrl;
+  return `${BASE_URL}dragdrop.html?userId=${email}&authType=${type}`;
 };
 
 //Log in the user using Outlook OAuth
@@ -81,5 +80,3 @@ getById('outlookbutton').addEventListener('click', () => loginUsingOutlook());
 getById('office365button').addEventListener('click', () => loginUsingOffice365());
 getById('sendcodebutton').addEventListener('click', engageEmailLogin);
 getById('sendcodebutton').value = `Send Code to ${email.substring(0, 15)}...`;
-
-initializeOnVirtru();

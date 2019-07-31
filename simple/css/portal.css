@@ -200,6 +200,16 @@ input[type="text"]
   transform: translate(-50%, -50%);
 }
 
+h2.tos {
+  font-family: 'Raleway';
+  margin: -28px -25px 25px;
+  padding: 5px 25px;
+  line-height: 30px;
+  font-size: 15px;
+  color: #7E7D7C;
+  text-align:center;
+}
+
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

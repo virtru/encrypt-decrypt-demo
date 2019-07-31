@@ -7554,6 +7554,20 @@ function getMimeByProtocol(isHtmlProtocol){
   return isHtmlProtocol ? {type: 'text/html;charset=binary'} : {type: 'application/json;charset=binary'};
 }
 
+//Handle filename parsing with parens involved
+function buildDecryptFilename(filename){
+  const ext = filename.substr(-4);
+  let finalFilename = filename;
+
+  if(ext === ".tdf"){
+    finalFilename = finalFilename.replace(ext,"");
+  }
+
+  finalFilename = finalFilename.replace(/\([^.]*\)$/, '');
+
+  return finalFilename;
+}
+
 //Encrypt or decrypt the file by using the support functions, depending on the value of the shouldEncrypt flag
 async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, userId, completion, asHtml) {
   if (shouldEncrypt) {
@@ -7563,13 +7577,7 @@ async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, userId, c
     completion && completion();
   } else {
     const written = await decrypt(filedata, userId, isHtmlProtocol);
-    const ext = filename.substr(-4);
-    let finalFilename = filename;
-
-    if(ext === ".tdf"){
-      finalFilename = finalFilename.replace(ext,"");
-    }
-
+    const finalFilename = buildDecryptFilename(filename).trim();
     saveFile(written, {type: getMIMEType(written).mime}, finalFilename);
     completion && completion();
   }
