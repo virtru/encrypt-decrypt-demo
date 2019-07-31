@@ -82,7 +82,7 @@ function handleFileSelect(evt){
     });
   };
 
-  forceLoginIfNecessary();
+  //forceLoginIfNecessary();
 
   processFiles(files, indx);
 
@@ -240,7 +240,7 @@ async function update(){
   updateButton.innerHTML = 'Updating...';
   updateInProgress = true;
 
-  forceLoginIfNecessary();
+  //forceLoginIfNecessary();
 
   await updatePolicy(fetchedPolicyBuilder);
   toggleUpdateButton(true);
@@ -471,7 +471,7 @@ function setupFileInputs(){
 
 //Initialize the elements and tabs as needed
 function init(){
-  forceLoginIfNecessary();
+  //forceLoginIfNecessary();
   togglePolicyElements(false);
   setUpTabs();
   activateUsersTab();            
@@ -480,5 +480,6 @@ function init(){
   setupFileInputs();
 }
 
-initializeOnVirtru(init);
+init();
+//initializeOnVirtru(init);
 
