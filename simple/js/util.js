@@ -132,5 +132,3 @@ window.addEventListener('DOMContentLoaded', function initalize(callback) {
   checkOnVirtru();
 });
 
-
-//buildClient();
