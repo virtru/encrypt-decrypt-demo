@@ -85,7 +85,7 @@ function authUrls() {
 
 //Ensure the user is logged in and has a valid id saved. Otherwise, forward to index
 function loggedIn(){
-  return true; //Virtru.Auth.isLoggedIn({email: getUser(), ...authUrls()});
+  return Virtru.Auth.isLoggedIn({email: getUser(), ...authUrls()});
 }
 
 //Log out a currently logged in user and redirect back to the login
