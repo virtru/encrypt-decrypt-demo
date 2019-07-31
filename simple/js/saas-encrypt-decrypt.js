@@ -50,7 +50,7 @@ function getMimeByProtocol(isHtmlProtocol){
   return isHtmlProtocol ? {type: 'text/html;charset=binary'} : {type: 'application/json;charset=binary'};
 }
 
-//Latenight filename parsing ftw!
+//Handle filename parsing with parens involved
 function buildDecryptFilename(filename){
   const ext = filename.substr(-4);
   let finalFilename = filename;
