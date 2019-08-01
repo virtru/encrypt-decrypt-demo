@@ -194,7 +194,7 @@ function handleFileViewer(evt){
         populateUserList(fetchedPolicy.getUsersWithAccess());
         getById('editingPolicyText').innerHTML = `Editing Policy`;
     }catch(e){
-      console.log(e);
+        console.error(e);
         alert('An error occurred in trying to read this policy. Please be sure you are the policy owner.');
         return;
     }
