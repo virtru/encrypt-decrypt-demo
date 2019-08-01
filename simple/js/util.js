@@ -45,13 +45,18 @@ function buildClient(){
     const kasEndpoint = getKasUrl();
     const acmEndpoint = getAcmUrl();
 
-    
-    client = new Virtru.Client({
+    const clientConf = {
       email: getUser(),
       easEndpoint: easEndpoint || endpoints.easEndpoint, 
       kasEndpoint: kasEndpoint || endpoints.kasEndpoint, 
       acmEndpoint: acmEndpoint || endpoints.acmEndpoint
-    });
+    };
+
+    if(appId){
+      clientConf.appId = appId;
+    }
+    
+    client = new Virtru.Client(clientConf);
   }
 
   return client;
@@ -59,12 +64,11 @@ function buildClient(){
 
 
 function getEndpoints(){
-  return {
-    "kasEndpoint": "https://api.virtru.com/kas",
-    "acmEndpoint": "https://api.virtru.com/acm",
-    "easEndpoint": "https://api.virtru.com/accounts",
-    "apiEndpoint": "https://api.virtru.com"
-  };
+  const apiEndpoint = "https://api.virtru.com";
+  const kasEndpoint = `${apiEndpoint}/kas`;
+  const acmEndpoint = `${apiEndpoint}/acm`;
+  const easEndpoint = `${apiEndpoint}/accounts`;
+  return { kasEndpoint, acmEndpoint, easEndpoint, apiEndpoint };
 }
 
 function authUrls() {
