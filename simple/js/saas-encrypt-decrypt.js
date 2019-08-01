@@ -14,36 +14,32 @@ async function streamToBuffer(stream) {
 
 //Encrypt the filedata and return the stream content and filename
 async function encrypt(fileData, filename, userId, asHtml) {
-  //TODO use withBuffer
   
   client = buildClient();
-  const contentStream = TDF.createMockStream(fileData);
+
   const policy = new Virtru.PolicyBuilder().build();
 
   const encryptParams = new Virtru.EncryptParamsBuilder()
-      .withStreamSource(contentStream)
+      .withArrayBufferSource(fileData)
       .withPolicy(policy)
       .withDisplayFilename(filename)
       .build();
 
-  const ct = await client.encrypt(encryptParams);
-  const buff = await streamToBuffer(ct);
-  return {content: buff, name: filename};
+  const enc = await client.encrypt(encryptParams);
+  return enc;
 }
 
 
 //Decrypt the file by creating an object url (for now) and return the stream content
-async function decrypt(filedata, userId, asHtml) {
+async function decrypt(fileData, userId, asHtml) {
 
  client = buildClient();
  const decryptParams = new Virtru.DecryptParamsBuilder()
-      .withBufferSource(filedata)
+      .withArrayBufferSource(fileData)
       .build();
 
- const content = await client.decrypt(decryptParams);
- const buff = await streamToBuffer(content);
- return buff;
-
+ const decrypted = await client.decrypt(decryptParams);
+ return decrypted;
 }
 
 function getMimeByProtocol(isHtmlProtocol){
@@ -68,13 +64,13 @@ function buildDecryptFilename(filename){
 async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, userId, completion, asHtml) {
   if (shouldEncrypt) {
     const ext = asHtml ? 'html' : 'tdf';
-    const written = await encrypt(filedata, filename, userId, asHtml);
-    saveFile(written.content, getMimeByProtocol(asHtml), `${written.name}.${ext}`);
+    const encrypted = await encrypt(filedata, filename, userId, asHtml);
+    await encrypted.toFile(`${filename}.${ext}`);
     completion && completion();
   } else {
-    const written = await decrypt(filedata, userId, isHtmlProtocol);
+    const decrypted = await decrypt(filedata, userId, isHtmlProtocol);
     const finalFilename = buildDecryptFilename(filename).trim();
-    saveFile(written, {type: getMIMEType(written).mime}, finalFilename);
+    await decrypted.toFile(finalFilename);
     completion && completion();
   }
 }

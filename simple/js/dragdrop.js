@@ -180,15 +180,21 @@ function handleFileViewer(evt){
 
   reader.onload = async (e) => {
     try{
-        const policyObjFromTdf = await readPolicyFromTDF(reader.result);
-        const parsedObjFromTdf = JSON.parse(policyObjFromTdf);
-        const uuid = parsedObjFromTdf.uuid;
-        fetchedPolicy = await fetchPolicy(uuid);
+
+        client = buildClient();
+
+        const decParams = new Virtru.DecryptParamsBuilder()
+          .withArrayBufferSource(reader.result)
+          .build();
+
+        const uuid = await client.getPolicyId(decParams);
+        fetchedPolicy = await client.fetchPolicy(uuid);
         fetchedPolicyBuilder = fetchedPolicy.builder();
         togglePolicyElements(true);
         populateUserList(fetchedPolicy.getUsersWithAccess());
-        getById('editingPolicyText').innerHTML = `Editing Policy...`;
+        getById('editingPolicyText').innerHTML = `Editing Policy`;
     }catch(e){
+      console.log(e);
         alert('An error occurred in trying to read this policy. Please be sure you are the policy owner.');
         return;
     }
