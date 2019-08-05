@@ -5,8 +5,8 @@
 This project represents an example of how to use Virtru Developer Platform to encrypt and decrypt files. This uses:
 
 * Virtru JavaScript SDK
-* A Vitru Hosted Key Access Server (KAS)
-* A Vitru Hosted Entity Attribute Server (EAS)
+* A Virtru Hosted Key Access Server (KAS)
+* A Virtru Hosted Entity Attribute Server (EAS)
 
 ## Setup Requirements
 
@@ -69,7 +69,7 @@ In order to stop the running local server hosting `local.virtru.com`, go to the 
 
 ## Where can I get more info?
 
-If you want more info on this demo or want to learn more about Virtru's Developer Platform, please go to [Virtru Developer Platform Documentation](https://developer.virtru.com/). More information on this demo can be found [here](https://developer.virtru.com/docs/demo).
+If you want more info on this demo or want to learn more about Virtru's Developer Platform, please go to [Virtru Developer Hub Documentation](https://developer.virtru.com/). More information on this demo can be found [here](https://developer.virtru.com/docs/demo).
 
 ## Getting Help
 
