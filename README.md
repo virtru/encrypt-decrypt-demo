@@ -1,4 +1,4 @@
-# Virtru Developer Platform Drag and Drop Demo
+# Virtru Developer Hub Drag and Drop Demo
 
 ![Drag and Drop](https://files.readme.io/43813ab-Screen_Shot_2019-02-14_at_2.33.59_PM.png)
 
