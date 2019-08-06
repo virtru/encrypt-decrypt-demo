@@ -20,5 +20,4 @@ imports.forEach((i) => {
 });
 
 //Add other necessary modules on the window
-window.Buffer = Buffer;
 window.moment = moment;
