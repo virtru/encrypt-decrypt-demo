@@ -1,15 +1,14 @@
 const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
 const getById = (id) => document.getElementById(id);
 const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
-const getUser = () => getQueryParam('userId');
-const getAuthType = () => getQueryParam('authType');
-const getAppId = () => getQueryParam('appId');
 
 
 const getAcmUrl = () => localStorage.getItem('acmUrl');
 const getKasUrl = () => localStorage.getItem('kasUrl');
 const getEasUrl = () => localStorage.getItem('easUrl');
 const getApiUrl = () => localStorage.getItem('apiUrl');
+const getUser = () => getQueryParam('virtruAuthWidgetEmail');
+
 
 let client, oauthClient;
 
@@ -28,18 +27,11 @@ const isSupportedBrowser = () => {
 }
 
 
-function emailActivationUsed(){
-  const method = getAuthType();
-  return method && method.toLowerCase() === 'email';
-}
-
 
 //Builds a new client (if needed)
 function buildClient(){
   if(!client){
 
-    const type = getAuthType();
-    const appId = getAppId();
     const endpoints = getEndpoints();
     const easEndpoint = getEasUrl();
     const kasEndpoint = getKasUrl();
@@ -51,10 +43,6 @@ function buildClient(){
       kasEndpoint: kasEndpoint || endpoints.kasEndpoint, 
       acmEndpoint: acmEndpoint || endpoints.acmEndpoint
     };
-
-    if(appId){
-      clientConf.appId = appId;
-    }
     
     client = new Virtru.Client(clientConf);
   }
@@ -100,11 +88,6 @@ function logout(){
 
 //Redirect the user if they don't have a current, valid saved appIdBundle
 function forceLoginIfNecessary(){
-
-  if(getAuthType() === 'static'){
-    return;
-  }
-
   if(!loggedIn()){
     logout();
   }

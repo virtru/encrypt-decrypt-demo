@@ -75,8 +75,11 @@ const engageEmailLogin = async () => {
   getById('activatecodebutton').addEventListener('click', engageActivateCode);
 };
 
+//getById('spinner').style.display = "none";
 getById('googlebutton').addEventListener('click', () => loginUsingGoogle());
 getById('outlookbutton').addEventListener('click', () => loginUsingOutlook());
 getById('office365button').addEventListener('click', () => loginUsingOffice365());
 getById('sendcodebutton').addEventListener('click', engageEmailLogin);
 getById('sendcodebutton').value = `Send Code to ${email.substring(0, 15)}...`;
+
+//setTimeout(()=>{ document.getElementById('spinner').style.display = "" }, 5000);
