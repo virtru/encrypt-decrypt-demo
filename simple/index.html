@@ -14,7 +14,10 @@
     <script>
         const redirectUrl = `${BASE_URL}dragdrop.html`;
         setTimeout(() => Virtru.AuthWidget('virtru-auth-widget-mount', {
-            redirectUrl
+            redirectUrl,
+            afterAuth: (email) => {
+                window.location = `${redirectUrl}?virtruAuthWidgetEmail=${email}`;
+            }
       }), 1000);
     </script>
   </body>
