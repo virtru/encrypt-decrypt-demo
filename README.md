@@ -76,7 +76,7 @@ $ nvm use
 $ npm ci
 
 # Start the node server
-$ sudo npm start
+$ npm start
 ```
 
 If running successfully, you can now visit `https://local.virtru.com`.
