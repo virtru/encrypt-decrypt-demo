@@ -98,7 +98,7 @@ In order to stop the running local server hosting `local.virtru.com`, go to the 
 
 There are many ways to get our attention. 
 
-* If you found a bug or have a feature request, please use `Github Issues`. 
+* If you found a bug or have a feature request, please use [Github Issues](https://github.com/virtru/encrypt-decrypt-demo/issues). 
 * You can [join](https://docs.google.com/forms/d/e/1FAIpQLSfCx5tSl9hGQSZ-H-ZIzNw6uWIPN3_HSpMtYssKQ9jytj9yQQ/viewform) Virtru's Developer Hub Community Slack channel to get your questions answered.
 * You can get support [here](https://support.virtru.com/hc/en-us/requests/new?ticket_form_id=360001419954)
 
