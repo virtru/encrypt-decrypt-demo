@@ -28,8 +28,6 @@ cleanup(){
 
 build(){
 	browserify ./simple/js/tdf-browserify.js -o ./simple/js/demo-utils.js
-	# Prepend license
-	echo "/*\n$(cat ./LICENSE)\n*/\n\n$(cat ./simple/js/demo-utils.js)" > ./simple/js/demo-utils.js
 }
 
 cleanup && build
