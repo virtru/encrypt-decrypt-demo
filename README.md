@@ -1,75 +1,98 @@
 # Virtru Developer Platform Drag and Drop Demo
 
-## What is this?
+![Drag and Drop](https://files.readme.io/43813ab-Screen_Shot_2019-02-14_at_2.33.59_PM.png)
 
-This project represents an example of how to use Virtru Developer Platform to encrypt and decrypt files. This uses:
+The Drag and Drop Demo leverages the [Virtru SDK for JavaScript](https://docs.developer.virtru.com/js/latest/index.html) as well as the [TDF Architecture](https://developer.virtru.com/docs/tdf-overview) in order to secure files and share them with others, while maintaining visibility and control of your data.
 
-* Virtru JavaScript SDK
-* A Vitru Hosted Key Access Server (KAS)
-* A Vitru Hosted Entity Attribute Server (EAS)
+This demo showcases features such as:
 
-## Setup Requirements
+- Securing a file such that only intended recipients can access its data
+- Revoking access to a secured file, so users can no longer access its data
+- Decrypting an encrypted file by an authorized user 
 
-Before you can successfully build and run this JS example, please be sure you have met the following pre-reqs:
+And uses the following technology:
 
-* Node/NPM - Node and NPM are both requirements to build and run the example
-* If you plan to run this locally, in your local `/etc/hosts` file, ensure you have the following added: `127.0.0.1 	local.virtru.com`. This will enable `local.virtru.com` hosting from your local machine.
-* If you are running this example locally from a Windows machine, please ensure you use a POSIX-compatible environment such as [Cygwin](`https://www.cygwin.com/`).
+- Virtru SDK for JavaScript
+- Virtru Auth Widget
+- A Vitru Hosted Key Access Server (KAS)
+- A Vitru Hosted Entity Attribute Server (EAS)
 
-## Clone
+## See it Live
 
-After [setting up Git](https://help.github.com/en/articles/set-up-git) on your local machine, clone this repository. From a command line interface:
+[Go here](https://demos.developer.virtru.com/dd/) to test drive the live demo. Afterwards, check the out Virtru's [Developer Hub](https://developer.virtru.com/docs/share-track) for a step-by-step guide on how it all works.
 
-1. Change to the desired directory
+## How it Works
 
-```console
-foo@bar:~$ cd my-projects 
-```
-
-2. Clone this repository
-
-```console
-foo@bar:~$ git clone git@github.com:virtru/encrypt-decrypt-demo.git
-foo@bar:~$ cd encrypt-decrypt-demo
-```
-
-## Running the Demo
-
-1. From within the project, issue the following from a command prompt:
-
-```console
-foo@bar:~$ npm run setup
-```
-
-2. Now build and start the server:
-
-```console
-foo@bar:~$ npm run start
-```
-
-Navigate to https://local.virtru.com/ in your browser. On Chrome you may need to allow access because the certificate the demo uses is self-signed. To do this, just click on the "Advanced" button and then click the link "Proceed to local.virtru.com (unsafe)".
+### Authenticating
 
 You'll be taken to the demo's login screen. Click 'Start', and log in with your Google, Outlook or Office365 account. If you have neither, you can enter your email address to receive a 8-digit code, e.g., `V-12345678`. 
 
+### Encrypting and Decrypting Files
+
 Once logged in, you should see two drag and drop areas for encrypting and decrypting TDF files.
 
-## Encrypting and Decrypting Files
-
-### Encrypting
+#### Encrypting
 
 When a file is dropped onto the encrypt region it will be encrypted using Virtru's infrastructure (its Key Access Server and Entity Attribute Server). Once encrypted, the file (as a `.tdf`) will be downloaded to your default download location.
 
-### Decrypting
+#### Decrypting
 
 Similar to encryption, when a previously encrypted `.tdf` file is dropped onto the decrypt region it will be decrypted using Virtru's Key Access Server. Once the decryption has taken place, the decrypted file (without the `.tdf` extension) will be downloaded to your default download location.
 
-## Stop the Server
+## Run it Locally
 
-In order to stop the running local server hosting `local.virtru.com`, go to the running Node server in the terminal and enter Ctrl^C.
+This demo can run on your local environment. Please ensure you meet the prerequisites and follow the steps.
 
-## Where can I get more info?
+### Prerequisites
 
-If you want more info on this demo or want to learn more about Virtru's Developer Platform, please go to [Virtru Developer Platform Documentation](https://developer.virtru.com/). More information on this demo can be found [here](https://developer.virtru.com/docs/demo).
+To be able to use Federated OAuth we suggest you to modify your `/etc/hosts`. This is an optional step, but note the fallback authentication will be email code only.
+
+#### Windows
+
+- Install a POSIX-compatible environment such as [Cygwin](https://www.cygwin.com/) or [Cmder](https://cmder.net/)
+- Install [NVM](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows)
+- Edit `c:\Windows\System32\Drivers\etc\hosts` to include `127.0.0.1 local.virtru.com`
+
+Alternatively you could install [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and use the instructions below for Linux
+
+#### Linux / MacOS
+
+- Install [NVM](https://github.com/nvm-sh/nvm#installation-and-update)
+- Edit `/etc/hosts` to include `127.0.0.1 local.virtru.com`
+
+### Getting Started
+
+```console
+# Clone the repository
+$ git clone git@github.com:virtru/encrypt-decrypt-demo.git
+
+# Change directory
+$ cd encrypt-decrypt-demo
+
+# Install node via NVM
+$ nvm use
+
+# Install node modules
+$ npm ci
+
+# Start the node server
+$ sudo npm start
+```
+
+If running successfully, you can now visit `https://local.virtru.com`.
+
+---
+
+You may be presented with a warning screen with a message similar to "Your connection is not private." This is due to the self-signed SSL certificate when running in development mode. To access the demo:
+
+- Chrome: Click `Advanced` then `Proceed to local.virtru.com (unsafe)`
+- Firefox: Click `Advanced` then `Accept the Risk and Continue`
+- Safari: Click `Show Details` then `visit this website`
+- Opera: Click `Help me understand` then `Proceed to local.virtru.com (unsafe)`
+
+#### Stop the Server
+
+In order to stop the running local server hosting `local.virtru.com`, go to the running Node server in the terminal hold the `ctrl` then press `c`.
 
 ## Getting Help
 
@@ -80,5 +103,8 @@ There are many ways to get our attention.
 * You can get support [here](https://support.virtru.com/hc/en-us/requests/new?ticket_form_id=360001419954)
 
 
+### License
 
+Copyright © 2019 Virtru Corporation
 
+This repo is released under the MIT license for all artifacts in this repo.
