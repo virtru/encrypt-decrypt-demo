@@ -1,23 +1,24 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/portal.css">
-    <title>Drag and Drop Demo: Virtru Developer Platform</title>
+    <link href="https://sdk.virtru.com/js/latest/auth-widget/index.css" rel="stylesheet"/>
+    <title>Encrypt-Decrypt Demo: Virtru Developer Platform</title>
     <script type="text/javascript" src="https://sdk.virtru.com/js/latest/virtru-sdk.min.js"></script>
+    <script type="text/javascript" src="https://sdk.virtru.com/js/latest/auth-widget/index.js"></script>
  </head>
    <body>
-    <form class="login">
-        <h1 class="login-title">Virtru Drag &amp; Drop Demo Login</h1>
-        <h2 class="login-instruction">Welcome! Enter your e-mail below and click 'Start' to begin the demo.</h2>
-        <input type="text" class="login-input" id="email" placeholder="user@domain.com" autofocus>   
-        <div class="button-container" align="center">
-            <a id="startbutton" class="button">
-                Start
-            </a>
-        </div>
-    </form>
     <script type="text/javascript" src="js/util.js"></script>
-    <script type="text/javascript" src="js/start.js"></script>
+    <div id="virtru-auth-widget-mount"></div>
+    <script>
+        const redirectUrl = `${BASE_URL}dragdrop.html`;
+        setTimeout(() => Virtru.AuthWidget('virtru-auth-widget-mount', {
+            redirectUrl,
+            afterAuth: (email) => {
+                window.location = `${redirectUrl}?virtruAuthWidgetEmail=${email}`;
+            }
+      }), 1000);
+    </script>
   </body>
 </html>

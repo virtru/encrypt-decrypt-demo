@@ -1,16 +1,5 @@
 let client;
 
-//Convert a stream to a buffer
-async function streamToBuffer(stream) {
-  const bufs = [];
-  stream.on('data', function(d) { bufs.push(d); });
-  return new Promise((resolve) => {
-    stream.on('end', function() {
-      resolve(Buffer.concat(bufs));
-    });
-  });
-}
-
 
 //Encrypt the filedata and return the stream content and filename
 async function encrypt(fileData, filename, userId, asHtml) {
