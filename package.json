@@ -4,7 +4,7 @@
   "description": "Simple example to encrypt and decrypt files in the TDF spec using Virtru hosted KAS and EAS.",
   "scripts": {
     "build": ". simple/scripts/build.sh",
-    "setup": "npm install; npm run build",
+    "prestart": "npm run build",
     "start": "cd server; npm install; node server.js"
   },
   "dependencies": {
