@@ -107,4 +107,8 @@ There are many ways to get our attention.
 
 Copyright © 2019 Virtru Corporation
 
-This repo is released under the MIT license for all artifacts in this repo.
+This repo is released under the MIT license for all artifacts in this repo with the following exceptions which are subject to our Virtru Data Protection Subscription Agreement(link)
+
+* https://www.github.com/virtru/virtru-tdf3-js
+
+
