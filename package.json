@@ -4,7 +4,8 @@
   "description": "Simple example to encrypt and decrypt files in the TDF spec using Virtru hosted KAS and EAS.",
   "scripts": {
     "build": ". simple/scripts/build.sh",
-    "prestart": "nvm use; npm run build",
+    "lint": "eslint --quiet ./simple/js/*.js",
+    "prestart": "npm run lint && npm run build",
     "start": "cd server; npm install; node server.js"
   },
   "dependencies": {
@@ -12,7 +13,9 @@
     "moment": "2.24.0"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.6",
-    "eslint": "^6.2.1"
+    "eslint": "^6.2.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "webpack-cli": "^3.3.6"
   }
 }
