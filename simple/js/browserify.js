@@ -20,18 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-/**
-	This file is to be compiled with browserify to be used by the simple example page.
-	See package.json (build) for more info.
-* */
 
 // Require all node modules needed to be access by the browser
 const moment = require('moment');
 
 // Imports for our demo
 const simpleEncryptDecrypt = require('./encrypt-decrypt.js');
-
-const imports = [simpleEncryptDecrypt];
 
 // Load all global properties of our explicitly imported modules on the window
 Object.keys(simpleEncryptDecrypt).forEach((key) => {

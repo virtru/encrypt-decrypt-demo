@@ -16,7 +16,8 @@
     },
     "rules": {
         "no-undef":"off",
-        "no-unused-vars":"off",
-        "no-plusplus":"off"
+        "no-plusplus":"off",
+        "no-param-reassign":"off",
+        "no-use-before-define": "off"
     }
 }

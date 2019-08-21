@@ -35,7 +35,7 @@ const addUserButton = getById('addUserButton');
 const moreButton = getById('moreButton');
 const addUserInput = getById('addUserInput');
 const disableReshareInput = getById('checkReshareDisabled');
-const enableExpirationInput = getById('checkExpirationEnabled');
+const enableExpirationInput = getById('checkExpirationEnabled'); // eslint-disable-line no-unused-vars
 const datePicker = getById('datepicker');
 const userList = getById('userList');
 
@@ -43,6 +43,26 @@ const userManagementTab = getById('user_tab');
 const userManagementArea = getById('policy_manager_user_container');
 const controlsManagementTab = getById('controls_tab');
 const controlsManagementArea = getById('policy_manager_controls_container');
+
+// Load a default user string
+function setDefaultUserListText() {
+  userList.innerHTML = '<option value="default">No users (except owner)</option>';
+}
+
+function setLoggedInUserLabel() {
+  getById('loggedInUserLabel').innerHTML = getUser();
+}
+
+function setupLogoutButton() {
+  getById('logoutButton').addEventListener('click', logout);
+}
+
+// UI function
+function setupDragoverEvent(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+  evt.dataTransfer.dropEffect = 'copy';
+}
 
 // Convert the date that comes from the picker to what's needed for the policy (utc)
 function convertPickerDateFormatToUTC(date) {
@@ -61,21 +81,16 @@ function getExpirationDateFromFetchedPolicy() {
   return fetchedPolicy && fetchedPolicy.getExpirationDeadline();
 }
 
-// From the fetched policy, extract the authorization list
-function getAuthorizationsFromFetchedPolicy() {
-  return fetchedPolicy && fetchedPolicy.getAuthorizations();
-}
-
 // Process a single file, and encrypt or decrypt it by passing the 'shouldEncrypt' toggle flag
 function processFile(fileOb, completion) {
   const reader = new FileReader();
   const filename = fileOb.name;
 
-  reader.onload = async (e) => {
+  reader.onload = async () => {
     try {
       await encryptOrDecryptFile(reader.result, filename, shouldEncrypt, completion);
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       if (!shouldEncrypt) {
         alert('An error occurred attempting to decrypt this file. Please be sure you have access to do so.');
       } else {
@@ -87,26 +102,6 @@ function processFile(fileOb, completion) {
   reader.readAsArrayBuffer(fileOb);
 }
 
-// Recursively process multiple files
-function handleFileSelect(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
-
-  const files = evt.dataTransfer ? evt.dataTransfer.files : evt.target.files;
-  const indx = 0;
-
-  const processFiles = (files, indx) => {
-    if (indx >= files.length) return;
-
-    processFile(files[indx], () => {
-      processFiles(files, ++indx);
-    });
-  };
-
-  forceLoginIfNecessary();
-
-  processFiles(files, indx);
-}
 
 // UI function
 function addUserToList(user) {
@@ -130,7 +125,7 @@ function toggleRemoveUserButton(enabled) {
   }
 }
 
-// UI function
+// Removes a user from the in-memory list
 function removeUserFromList() {
   userList.remove(userList.selectedIndex);
 
@@ -146,7 +141,6 @@ function removeUser() {
   fetchedPolicyBuilder.removeUsersWithAccess(userToRemove);
   removeUserFromList(userToRemove);
 }
-
 
 // Adds the user to the policy in-memory that is created using the text input
 function addUser() {
@@ -187,7 +181,46 @@ function populateUserList(users) {
   }
 }
 
-// Allows the drag and drop functionality to first load the file's policy, then populate all UI elements
+/* eslint-disable no-unused-vars */
+
+// When the user drags over the encrypt region
+function handleEncryptDragOver(evt) {
+  shouldEncrypt = true;
+  setupDragoverEvent(evt);
+}
+
+// When the user drags over the decrypt region
+function handleDecryptDragOver(evt) {
+  shouldEncrypt = false;
+  setupDragoverEvent(evt);
+}
+
+// When the user drags over the policy edit region
+function handleViewDragOver(evt) {
+  setupDragoverEvent(evt);
+}
+
+// Recursively process multiple files
+function handleFileSelect(evt) {
+  evt.stopPropagation();
+  evt.preventDefault();
+
+  const allFiles = evt.dataTransfer ? evt.dataTransfer.files : evt.target.files;
+
+  const processFiles = (files, indx) => {
+    if (indx >= files.length) return;
+
+    processFile(files[indx], () => {
+      processFiles(files, ++indx);
+    });
+  };
+
+  forceLoginIfNecessary();
+
+  processFiles(allFiles, 0);
+}
+
+// Allows the drag and drop functionality to first load the file's policy, and populate elements
 function handleFileViewer(evt) {
   evt.stopPropagation();
   evt.preventDefault();
@@ -212,8 +245,8 @@ function handleFileViewer(evt) {
       togglePolicyElements(true);
       populateUserList(fetchedPolicy.getUsersWithAccess());
       getById('editingPolicyText').innerHTML = 'Editing Policy';
-    } catch (e) {
-      console.error(e);
+    } catch (err) {
+      console.error(err);
       alert('An error occurred in trying to read this policy. Please be sure you are the policy owner.');
     }
   };
@@ -221,28 +254,25 @@ function handleFileViewer(evt) {
   reader.readAsArrayBuffer(file);
 }
 
-// When the user drags over the encrypt region
-function handleEncryptDragOver(evt) {
-  shouldEncrypt = true;
-  setupDragoverEvent(evt);
-}
+/* eslint-enable no-unused-vars */
 
-// When the user drags over the decrypt region
-function handleDecryptDragOver(evt) {
-  shouldEncrypt = false;
-  setupDragoverEvent(evt);
-}
 
-// When the user drags over the policy edit region
-function handleViewDragOver(evt) {
-  setupDragoverEvent(evt);
+// UI function
+function toggleRevokeButton(enabled) {
+  if (!enabled) {
+    revokeButton.className = 'policy_revoke_button_disabled';
+    revokeButton.removeEventListener('click', revoke);
+  } else {
+    revokeButton.className = 'policy_revoke_button';
+    revokeButton.addEventListener('click', revoke);
+  }
 }
 
 // Revokes the policy by calling the revoke endpoint
 async function revoke() {
   if (revokeInProgress) return;
 
-  if (!confirm('This will remove access for all users (except the Policy Owner). Continue?')) return;
+  if (!confirm('This will remove access for all users (except the Policy Owner). Continue?')) return; // eslint-disable-line no-restricted-globals
 
   toggleRevokeButton(false);
   const revokeButtonContent = revokeButton.innerHTML;
@@ -271,16 +301,6 @@ async function update() {
   updateInProgress = false;
 }
 
-// UI function
-function toggleRevokeButton(enabled) {
-  if (!enabled) {
-    revokeButton.className = 'policy_revoke_button_disabled';
-    revokeButton.removeEventListener('click', revoke);
-  } else {
-    revokeButton.className = 'policy_revoke_button';
-    revokeButton.addEventListener('click', revoke);
-  }
-}
 
 // Ensures that the date that is selected before an update is complete, otherwise stop the update
 function validateAndSetDatePickerSelection() {
@@ -430,13 +450,6 @@ function deactivateTab(containerEl, tabEl) {
   containerEl.className = containerEl.className.replace(' active', '');
 }
 
-// UI function
-function setupDragoverEvent(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
-  evt.dataTransfer.dropEffect = 'copy';
-}
-
 // UI toggle function
 function toggleUserList(enabled) {
   userList.disabled = !enabled;
@@ -453,42 +466,6 @@ function toggleAddUserInput(enabled) {
   addUserInput.disabled = !enabled;
 }
 
-// Load a default user string
-function setDefaultUserListText() {
-  userList.innerHTML = '<option value="default">No users (except owner)</option>';
-}
-
-function setLoggedInUserLabel() {
-  getById('loggedInUserLabel').innerHTML = getUser();
-}
-
-function setupLogoutButton() {
-  getById('logoutButton').addEventListener('click', logout);
-}
-
-// Handle a single file encryption - useful for automated testing
-function uploadSingleFileEncrypt(evt) {
-  shouldEncrypt = true;
-  handleFileSelect(evt);
-}
-
-// Handle a single file decryption - useful for automated testing
-function uploadSingleFileDecrypt(evt) {
-  shouldEncrypt = false;
-  handleFileSelect(evt);
-}
-
-// Handle a single file load for policies - useful for automated testing
-function loadSingleFileView(evt) {
-  handleFileViewer(evt);
-}
-
-function setupFileInputs() {
-  getById('enc_file_upload').addEventListener('change', uploadSingleFileEncrypt);
-  getById('dec_file_upload').addEventListener('change', uploadSingleFileDecrypt);
-  getById('view_file_upload').addEventListener('change', loadSingleFileView);
-}
-
 // Initialize the elements and tabs as needed
 function init() {
   forceLoginIfNecessary();
@@ -497,7 +474,6 @@ function init() {
   activateUsersTab();
   setLoggedInUserLabel();
   setupLogoutButton();
-  setupFileInputs();
 }
 
 init();

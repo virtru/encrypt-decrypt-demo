@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/* eslint-disable no-unused-vars */
+
 const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
 const getById = (id) => document.getElementById(id);
 const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
@@ -27,8 +29,6 @@ const getUser = () => getQueryParam('virtruAuthWidgetEmail');
 
 
 let client;
-let oauthClient;
-
 
 const isSupportedBrowser = () => {
   const supportedBrowserStrings = ['Chrome', 'Firefox'];
@@ -77,7 +77,7 @@ if (!isSupportedBrowser()) {
   window.location.href = `${BASE_URL}incompatible-browser.html`;
 }
 
-window.addEventListener('DOMContentLoaded', (callback) => {
+window.addEventListener('DOMContentLoaded', () => {
   const maxTries = 100;
   const timeout = 100;
   let tries = 0;
