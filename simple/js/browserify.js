@@ -20,33 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-const userId = new URL(window.location.href).searchParams.get('userId');
-const protocol = new URL(window.location.href).searchParams.get('protocol');
+/**
+	This file is to be compiled with browserify to be used by the simple example page.
+	See package.json (build) for more info.
+* */
 
-function isHtmlProtocol() { return protocol && protocol.toLowerCase() === 'html'; }
+// Require all node modules needed to be access by the browser
+const moment = require('moment');
 
+// Imports for our demo
+const simpleEncryptDecrypt = require('./encrypt-decrypt.js');
 
-//Revoke the policy by its UUID
-async function revokePolicy(uuid) {
+const imports = [simpleEncryptDecrypt];
 
-  forceLoginIfNecessary();
-  const client = buildClient();
+// Load all global properties of our explicitly imported modules on the window
+Object.keys(simpleEncryptDecrypt).forEach((key) => {
+   window[key] = simpleEncryptDecrypt[key];
+});
 
-  await client.revokePolicy(uuid);
-}
-
-//Update the policy by its UUID
-async function updatePolicy(policy) {
-
-  forceLoginIfNecessary();
-  const client = buildClient();
-
-  await client.updatePolicy(policy.build());
-}
-
-
-module.exports = {
-  revokePolicy,
-  updatePolicy,
-  isHtmlProtocol
-};
+// Add other necessary modules on the window
+window.moment = moment;

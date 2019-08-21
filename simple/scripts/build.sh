@@ -27,7 +27,7 @@ cleanup(){
 }
 
 build(){
-	browserify ./simple/js/tdf-browserify.js -o ./simple/js/build/demo-utils.js
+	browserify ./simple/js/browserify.js -o ./simple/js/build/demo-utils.js
 }
 
 cleanup && build

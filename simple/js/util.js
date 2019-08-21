@@ -32,28 +32,26 @@ const getApiUrl = () => localStorage.getItem('apiUrl');
 const getUser = () => getQueryParam('virtruAuthWidgetEmail');
 
 
-let client, oauthClient;
+let client; let
+  oauthClient;
 
 
 const isSupportedBrowser = () => {
-  const supportedBrowserStrings = ["Chrome", "Firefox"];
+  const supportedBrowserStrings = ['Chrome', 'Firefox'];
   let supported = false;
   supportedBrowserStrings.forEach((browser) => {
-    if(navigator.userAgent.search(browser) >= 0){
-      supported=true;
-      return;
+    if (navigator.userAgent.search(browser) >= 0) {
+      supported = true;
     }
   });
 
   return supported;
-}
+};
 
 
-
-//Builds a new client (if needed)
-function buildClient(){
-  if(!client){
-
+// Builds a new client (if needed)
+function buildClient() {
+  if (!client) {
     const endpoints = getEndpoints();
     const easEndpoint = getEasUrl();
     const kasEndpoint = getKasUrl();
@@ -61,11 +59,11 @@ function buildClient(){
 
     const clientConf = {
       email: getUser(),
-      easEndpoint: easEndpoint || endpoints.easEndpoint, 
-      kasEndpoint: kasEndpoint || endpoints.kasEndpoint, 
-      acmEndpoint: acmEndpoint || endpoints.acmEndpoint
+      easEndpoint: easEndpoint || endpoints.easEndpoint,
+      kasEndpoint: kasEndpoint || endpoints.kasEndpoint,
+      acmEndpoint: acmEndpoint || endpoints.acmEndpoint,
     };
-    
+
     client = new Virtru.Client(clientConf);
   }
 
@@ -73,12 +71,14 @@ function buildClient(){
 }
 
 
-function getEndpoints(){
-  const apiEndpoint = "https://api.virtru.com";
+function getEndpoints() {
+  const apiEndpoint = 'https://api.virtru.com';
   const kasEndpoint = `${apiEndpoint}/kas`;
   const acmEndpoint = `${apiEndpoint}/acm`;
   const easEndpoint = `${apiEndpoint}/accounts`;
-  return { kasEndpoint, acmEndpoint, easEndpoint, apiEndpoint };
+  return {
+    kasEndpoint, acmEndpoint, easEndpoint, apiEndpoint,
+  };
 }
 
 function authUrls() {
@@ -91,46 +91,46 @@ function authUrls() {
   const urls = {
     accountsUrl: easEndpoint || endpoints.easEndpoint,
     acmUrl: acmEndpoint || endpoints.acmEndpoint,
-    apiUrl: apiEndpoint || endpoints.apiEndpoint
+    apiUrl: apiEndpoint || endpoints.apiEndpoint,
   };
 
   return urls;
 }
 
-//Ensure the user is logged in and has a valid id saved. Otherwise, forward to index
-function loggedIn(){
-  return Virtru.Auth.isLoggedIn({email: getUser(), ...authUrls()});
+// Ensure the user is logged in and has a valid id saved. Otherwise, forward to index
+function loggedIn() {
+  return Virtru.Auth.isLoggedIn({ email: getUser(), ...authUrls() });
 }
 
-//Log out a currently logged in user and redirect back to the login
-function logout(){
-  Virtru.Auth.logout({email: getUser(), ...authUrls()});
+// Log out a currently logged in user and redirect back to the login
+function logout() {
+  Virtru.Auth.logout({ email: getUser(), ...authUrls() });
   window.location.href = `${BASE_URL}index.html`;
 }
 
-//Redirect the user if they don't have a current, valid saved appIdBundle
-function forceLoginIfNecessary(){
-  if(!loggedIn()){
+// Redirect the user if they don't have a current, valid saved appIdBundle
+function forceLoginIfNecessary() {
+  if (!loggedIn()) {
     logout();
   }
 }
 
-//If the user is already logged in with a valid appIdBundle, just forward them to the demo
-async function skipLoginIfPossible(){  
-  if(loggedIn()) window.location.href = `${BASE_URL}dragdrop.html?userId=${loggedInUser}`;
+// If the user is already logged in with a valid appIdBundle, just forward them to the demo
+async function skipLoginIfPossible() {
+  if (loggedIn()) window.location.href = `${BASE_URL}dragdrop.html?userId=${loggedInUser}`;
 }
 
-if(!isSupportedBrowser()){
+if (!isSupportedBrowser()) {
   window.location.href = `${BASE_URL}incompatible-browser.html`;
 }
 
-window.addEventListener('DOMContentLoaded', function initalize(callback) {
+window.addEventListener('DOMContentLoaded', (callback) => {
   const maxTries = 100;
   const timeout = 100;
   let tries = 0;
   function checkOnVirtru() {
-    if(window.Virtru && window.Virtru.OAuth) {
-      console.log('Initialized Virtru SDK')
+    if (window.Virtru && window.Virtru.OAuth) {
+      console.log('Initialized Virtru SDK');
       virtruInitalized = true;
     } else if (tries++ < maxTries) {
       setTimeout(checkOnVirtru, timeout);
@@ -140,4 +140,3 @@ window.addEventListener('DOMContentLoaded', function initalize(callback) {
   }
   checkOnVirtru();
 });
-

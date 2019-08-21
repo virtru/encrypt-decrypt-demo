@@ -4625,50 +4625,98 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+/**
+	This file is to be compiled with browserify to be used by the simple example page.
+	See package.json (build) for more info.
+* */
+
+// Require all node modules needed to be access by the browser
+const moment = require('moment');
+
+// Imports for our demo
+const simpleEncryptDecrypt = require('./encrypt-decrypt.js');
+
+const imports = [simpleEncryptDecrypt];
+
+// Load all global properties of our explicitly imported modules on the window
+Object.keys(simpleEncryptDecrypt).forEach((key) => {
+   window[key] = simpleEncryptDecrypt[key];
+});
+
+// Add other necessary modules on the window
+window.moment = moment;
+
+},{"./encrypt-decrypt.js":3,"moment":1}],3:[function(require,module,exports){
+// MIT License
+//
+// Copyright (c) 2019 Virtru Corporation
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
 let client;
 
 
-//Encrypt the filedata and return the stream content and filename
+const userId = new URL(window.location.href).searchParams.get('userId');
+const protocol = new URL(window.location.href).searchParams.get('protocol');
+
+function isHtmlProtocol() { return protocol && protocol.toLowerCase() === 'html'; }
+
+
+// Encrypt the filedata and return the stream content and filename
 async function encrypt(fileData, filename, userId, asHtml) {
-  
   client = buildClient();
 
   const policy = new Virtru.PolicyBuilder().build();
 
   const encryptParams = new Virtru.EncryptParamsBuilder()
-      .withArrayBufferSource(fileData)
-      .withPolicy(policy)
-      .withDisplayFilename(filename)
-      .build();
+    .withArrayBufferSource(fileData)
+    .withPolicy(policy)
+    .withDisplayFilename(filename)
+    .build();
 
   const enc = await client.encrypt(encryptParams);
   return enc;
 }
 
 
-//Decrypt the file by creating an object url (for now) and return the stream content
+// Decrypt the file by creating an object url (for now) and return the stream content
 async function decrypt(fileData, userId, asHtml) {
+  client = buildClient();
+  const decryptParams = new Virtru.DecryptParamsBuilder()
+    .withArrayBufferSource(fileData)
+    .build();
 
- client = buildClient();
- const decryptParams = new Virtru.DecryptParamsBuilder()
-      .withArrayBufferSource(fileData)
-      .build();
-
- const decrypted = await client.decrypt(decryptParams);
- return decrypted;
+  const decrypted = await client.decrypt(decryptParams);
+  return decrypted;
 }
 
-function getMimeByProtocol(isHtmlProtocol){
-  return isHtmlProtocol ? {type: 'text/html;charset=binary'} : {type: 'application/json;charset=binary'};
+function getMimeByProtocol(isHtmlProtocol) {
+  return isHtmlProtocol ? { type: 'text/html;charset=binary' } : { type: 'application/json;charset=binary' };
 }
 
-//Handle filename parsing with parens involved
-function buildDecryptFilename(filename){
+// Handle filename parsing with parens involved
+function buildDecryptFilename(filename) {
   const ext = filename.substr(-4);
   let finalFilename = filename;
 
-  if(ext === ".tdf"){
-    finalFilename = finalFilename.replace(ext,"");
+  if (ext === '.tdf') {
+    finalFilename = finalFilename.replace(ext, '');
   }
 
   finalFilename = finalFilename.replace(/\([^.]*\)$/, '');
@@ -4676,7 +4724,7 @@ function buildDecryptFilename(filename){
   return finalFilename;
 }
 
-//Encrypt or decrypt the file by using the support functions, depending on the value of the shouldEncrypt flag
+// Encrypt or decrypt the file by using the support functions, depending on the value of the shouldEncrypt flag
 async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, userId, completion, asHtml) {
   if (shouldEncrypt) {
     const ext = asHtml ? 'html' : 'tdf';
@@ -4691,108 +4739,27 @@ async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, userId, c
   }
 }
 
-module.exports = {
-  encryptOrDecryptFile
-};
-},{}],3:[function(require,module,exports){
-// MIT License
-//
-// Copyright (c) 2019 Virtru Corporation
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
-const userId = new URL(window.location.href).searchParams.get('userId');
-const protocol = new URL(window.location.href).searchParams.get('protocol');
-
-function isHtmlProtocol() { return protocol && protocol.toLowerCase() === 'html'; }
-
-
-//Revoke the policy by its UUID
+// Revoke the policy by its UUID
 async function revokePolicy(uuid) {
-
   forceLoginIfNecessary();
   const client = buildClient();
 
   await client.revokePolicy(uuid);
 }
 
-//Update the policy by its UUID
+// Update the policy by its UUID
 async function updatePolicy(policy) {
-
   forceLoginIfNecessary();
   const client = buildClient();
 
   await client.updatePolicy(policy.build());
 }
 
-
 module.exports = {
   revokePolicy,
   updatePolicy,
-  isHtmlProtocol
+  isHtmlProtocol,
+  encryptOrDecryptFile
 };
 
-},{}],4:[function(require,module,exports){
-// MIT License
-//
-// Copyright (c) 2019 Virtru Corporation
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
-/**
-	This file is to be compiled with browserify to be used by the simple example page.
-	See package.json (build) for more info.
-**/
-
-//Require all node modules needed to be access by the browser
-const moment = require('moment');
-
-//Imports for our simple example
-const simpleTDFUtil = require('./saas-tdf-util.js');
-const simpleEncryptDecrypt = require('./saas-encrypt-decrypt.js');
-
-const imports = [simpleTDFUtil, simpleEncryptDecrypt];
-
-//Load all global properties of our explicitly imported modules on the window
-imports.forEach((i) => {
-  Object.keys(i).forEach((key) => {
-    window[key] = i[key];
-  });
-});
-
-//Add other necessary modules on the window
-window.moment = moment;
-
-},{"./saas-encrypt-decrypt.js":2,"./saas-tdf-util.js":3,"moment":1}]},{},[4]);
+},{}]},{},[2]);
