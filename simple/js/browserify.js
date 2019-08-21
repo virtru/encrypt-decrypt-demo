@@ -35,7 +35,7 @@ const imports = [simpleEncryptDecrypt];
 
 // Load all global properties of our explicitly imported modules on the window
 Object.keys(simpleEncryptDecrypt).forEach((key) => {
-   window[key] = simpleEncryptDecrypt[key];
+  window[key] = simpleEncryptDecrypt[key];
 });
 
 // Add other necessary modules on the window

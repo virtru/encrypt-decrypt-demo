@@ -4640,7 +4640,7 @@ const imports = [simpleEncryptDecrypt];
 
 // Load all global properties of our explicitly imported modules on the window
 Object.keys(simpleEncryptDecrypt).forEach((key) => {
-   window[key] = simpleEncryptDecrypt[key];
+  window[key] = simpleEncryptDecrypt[key];
 });
 
 // Add other necessary modules on the window
@@ -4671,15 +4671,8 @@ window.moment = moment;
 
 let client;
 
-
-const userId = new URL(window.location.href).searchParams.get('userId');
-const protocol = new URL(window.location.href).searchParams.get('protocol');
-
-function isHtmlProtocol() { return protocol && protocol.toLowerCase() === 'html'; }
-
-
 // Encrypt the filedata and return the stream content and filename
-async function encrypt(fileData, filename, userId, asHtml) {
+async function encrypt(fileData, filename) {
   client = buildClient();
 
   const policy = new Virtru.PolicyBuilder().build();
@@ -4696,7 +4689,7 @@ async function encrypt(fileData, filename, userId, asHtml) {
 
 
 // Decrypt the file by creating an object url (for now) and return the stream content
-async function decrypt(fileData, userId, asHtml) {
+async function decrypt(fileData) {
   client = buildClient();
   const decryptParams = new Virtru.DecryptParamsBuilder()
     .withArrayBufferSource(fileData)
@@ -4704,10 +4697,6 @@ async function decrypt(fileData, userId, asHtml) {
 
   const decrypted = await client.decrypt(decryptParams);
   return decrypted;
-}
-
-function getMimeByProtocol(isHtmlProtocol) {
-  return isHtmlProtocol ? { type: 'text/html;charset=binary' } : { type: 'application/json;charset=binary' };
 }
 
 // Handle filename parsing with parens involved
@@ -4724,42 +4713,38 @@ function buildDecryptFilename(filename) {
   return finalFilename;
 }
 
-// Encrypt or decrypt the file by using the support functions, depending on the value of the shouldEncrypt flag
-async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, userId, completion, asHtml) {
+// Encrypt or decrypt the file by using the support functions
+async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, completion) {
   if (shouldEncrypt) {
-    const ext = asHtml ? 'html' : 'tdf';
-    const encrypted = await encrypt(filedata, filename, userId, asHtml);
-    await encrypted.toFile(`${filename}.${ext}`);
-    completion && completion();
+    const encrypted = await encrypt(filedata, filename);
+    await encrypted.toFile(`${filename}.tdf`);
   } else {
-    const decrypted = await decrypt(filedata, userId, isHtmlProtocol);
+    const decrypted = await decrypt(filedata);
     const finalFilename = buildDecryptFilename(filename).trim();
     await decrypted.toFile(finalFilename);
-    completion && completion();
+  }
+
+  if (completion) {
+    completion();
   }
 }
 
 // Revoke the policy by its UUID
 async function revokePolicy(uuid) {
   forceLoginIfNecessary();
-  const client = buildClient();
-
-  await client.revokePolicy(uuid);
+  await buildClient().revokePolicy(uuid);
 }
 
 // Update the policy by its UUID
 async function updatePolicy(policy) {
   forceLoginIfNecessary();
-  const client = buildClient();
-
-  await client.updatePolicy(policy.build());
+  await buildClient().updatePolicy(policy.build());
 }
 
 module.exports = {
   revokePolicy,
   updatePolicy,
-  isHtmlProtocol,
-  encryptOrDecryptFile
+  encryptOrDecryptFile,
 };
 
 },{}]},{},[2]);

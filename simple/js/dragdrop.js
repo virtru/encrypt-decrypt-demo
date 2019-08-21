@@ -73,7 +73,7 @@ function processFile(fileOb, completion) {
 
   reader.onload = async (e) => {
     try {
-      await encryptOrDecryptFile(reader.result, filename, shouldEncrypt, getUser(), completion, isHtmlProtocol());
+      await encryptOrDecryptFile(reader.result, filename, shouldEncrypt, completion);
     } catch (e) {
       console.error(e);
       if (!shouldEncrypt) {

@@ -23,17 +23,11 @@
 const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
 const getById = (id) => document.getElementById(id);
 const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
-
-
-const getAcmUrl = () => localStorage.getItem('acmUrl');
-const getKasUrl = () => localStorage.getItem('kasUrl');
-const getEasUrl = () => localStorage.getItem('easUrl');
-const getApiUrl = () => localStorage.getItem('apiUrl');
 const getUser = () => getQueryParam('virtruAuthWidgetEmail');
 
 
-let client; let
-  oauthClient;
+let client;
+let oauthClient;
 
 
 const isSupportedBrowser = () => {
@@ -51,60 +45,19 @@ const isSupportedBrowser = () => {
 
 // Builds a new client (if needed)
 function buildClient() {
-  if (!client) {
-    const endpoints = getEndpoints();
-    const easEndpoint = getEasUrl();
-    const kasEndpoint = getKasUrl();
-    const acmEndpoint = getAcmUrl();
-
-    const clientConf = {
-      email: getUser(),
-      easEndpoint: easEndpoint || endpoints.easEndpoint,
-      kasEndpoint: kasEndpoint || endpoints.kasEndpoint,
-      acmEndpoint: acmEndpoint || endpoints.acmEndpoint,
-    };
-
-    client = new Virtru.Client(clientConf);
-  }
-
+  client = client || new Virtru.Client({ email: getUser() });
   return client;
 }
 
 
-function getEndpoints() {
-  const apiEndpoint = 'https://api.virtru.com';
-  const kasEndpoint = `${apiEndpoint}/kas`;
-  const acmEndpoint = `${apiEndpoint}/acm`;
-  const easEndpoint = `${apiEndpoint}/accounts`;
-  return {
-    kasEndpoint, acmEndpoint, easEndpoint, apiEndpoint,
-  };
-}
-
-function authUrls() {
-  const endpoints = getEndpoints();
-  const easEndpoint = getEasUrl();
-  const kasEndpoint = getKasUrl();
-  const acmEndpoint = getAcmUrl();
-  const apiEndpoint = getApiUrl();
-
-  const urls = {
-    accountsUrl: easEndpoint || endpoints.easEndpoint,
-    acmUrl: acmEndpoint || endpoints.acmEndpoint,
-    apiUrl: apiEndpoint || endpoints.apiEndpoint,
-  };
-
-  return urls;
-}
-
 // Ensure the user is logged in and has a valid id saved. Otherwise, forward to index
 function loggedIn() {
-  return Virtru.Auth.isLoggedIn({ email: getUser(), ...authUrls() });
+  return Virtru.Auth.isLoggedIn({ email: getUser() });
 }
 
 // Log out a currently logged in user and redirect back to the login
 function logout() {
-  Virtru.Auth.logout({ email: getUser(), ...authUrls() });
+  Virtru.Auth.logout({ email: getUser() });
   window.location.href = `${BASE_URL}index.html`;
 }
 
