@@ -1,6 +1,6 @@
 {
   "name": "encrypt-decrypt-demo",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Simple example to encrypt and decrypt files in the TDF spec using Virtru hosted KAS and EAS.",
   "scripts": {
     "build": ". simple/scripts/build.sh",
