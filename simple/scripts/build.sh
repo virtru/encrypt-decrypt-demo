@@ -21,13 +21,13 @@
 # SOFTWARE.
 
 cleanup(){
-	if [ -f ./simple/js/demo-utils.js ]; then 
-		rm ./simple/js/demo-utils.js; 
+	if [ -f ./simple/js/build/demo-utils.js ]; then 
+		rm ./simple/js/build/demo-utils.js; 
 	fi
 }
 
 build(){
-	browserify ./simple/js/tdf-browserify.js -o ./simple/js/demo-utils.js
+	browserify ./simple/js/browserify.js -o ./simple/js/build/demo-utils.js
 }
 
 cleanup && build

@@ -1,17 +1,22 @@
 {
   "name": "encrypt-decrypt-demo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple example to encrypt and decrypt files in the TDF spec using Virtru hosted KAS and EAS.",
   "scripts": {
     "build": ". simple/scripts/build.sh",
-    "prestart": "npm run build",
-    "start": "cd server; npm install; node server.js"
+    "lint": "eslint --quiet ./simple/js/*.js",
+    "start": "npm run lint && (npm run build; cd server; npm install; node server.js)",
+    "watch": "nodemon --watch ./simple/js --ignore ./simple/js/build --exec 'npm run start'"
   },
   "dependencies": {
     "browserify": "16.2.3",
     "moment": "2.24.0"
   },
   "devDependencies": {
+    "eslint": "^6.2.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "nodemon": "^1.19.1",
     "webpack-cli": "^3.3.6"
   }
 }
