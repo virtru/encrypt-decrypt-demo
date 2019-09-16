@@ -6,13 +6,15 @@
     "build": ". simple/scripts/build.sh",
     "lint": "eslint --quiet ./simple/js/*.js",
     "start": "npm run lint && (npm run build; cd server; npm install; node server.js)",
-    "watch": "nodemon --watch ./simple/js --ignore ./simple/js/build --exec 'npm run start'"
+    "watch": "nodemon --watch ./simple/js --ignore ./simple/js/build --exec 'npm run start'",
+    "audit": "audit-ci --config .audit-ci.json"
   },
   "dependencies": {
     "browserify": "16.2.3",
     "moment": "2.24.0"
   },
   "devDependencies": {
+    "audit-ci": "^2.3.0",
     "eslint": "^6.2.1",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.18.2",

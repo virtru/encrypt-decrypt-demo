@@ -19,6 +19,13 @@ steps:
 
   - wait
 
+  - label: ":npm: :lock: NPM Audit"
+    command: ".buildkite/scripts/npm-audit.sh"
+    agents:
+      - *agent_queue
+
+  - wait
+
   - label: ":upside_down_face: Run linter"
     command: "buildkite-scripts/scripts/run-linting.sh"
     agents:
