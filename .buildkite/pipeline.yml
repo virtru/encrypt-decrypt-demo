@@ -48,7 +48,63 @@ steps:
       - *agent_queue
 
   - wait
+  - label: ':npm: NPM Build (Production)'
+    command: 'buildkite-scripts/scripts/npm-build.sh'
+    branches: 'master'
+    env:
+      REACT_APP_VIRTRU_ENV: 'production'
+    agents:
+      - *agent_queue
 
+  - label: ':npm: NPM Build (Staging)'
+    command: 'buildkite-scripts/scripts/npm-build.sh'
+    branches: 'develop'
+    env:
+      REACT_APP_VIRTRU_ENV: 'staging'
+    agents:
+      - *agent_queue
+
+  - label: ':npm: NPM Build (Develop)'
+    command: 'buildkite-scripts/scripts/npm-build.sh'
+    branches: '!master !develop'
+    env:
+      REACT_APP_VIRTRU_ENV: 'develop'
+    agents:
+      - *agent_queue
+
+  - wait
+  # Build and Deploy (Staging)
+  - label: ':s3: Deploy to S3 Staging'
+    command: 'buildkite-scripts/scripts/developer-demos/deploy-to-s3.sh'
+    branches: 'develop'
+    env:
+      S3_PATH: 'dd-staging'
+    agents:
+      - *agent_queue
+  - wait
+
+  - label: ':s3: Invalidate CloudFront Cache Staging'
+    command: 'buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh'
+    branches: 'develop'
+    env:
+      S3_PATH: 'dd-staging'
+    agents:
+      - *agent_queue
+
+  - block: 'Unblock Deploy'
+
+  - block: 'Check your branch name'
+    prompt: 'Your branch name does not match expected options. This will not result in a successful deployment unless you have explicitly defined environment variables.'
+    branches: '!master !develop !*release/* !*feature/* !*hotfix/* !*bug/*'
+
+  # Build and Deploy (Develop)
+  - label: ':s3: Deploy to S3 Develop'
+    command: 'buildkite-scripts/scripts/developer-demos/deploy-to-s3.sh'
+    branches: '!master !develop'
+    env:
+      S3_PATH: 'dd-develop'
+    agents:
+      - *agent_queue
   - label: ":s3: Invalidate CloudFront Cache"
     command: "buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh"
     agents:
