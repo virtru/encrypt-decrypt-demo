@@ -52,7 +52,7 @@ steps:
     command: 'buildkite-scripts/scripts/npm-build.sh'
     branches: 'master'
     env:
-      REACT_APP_VIRTRU_ENV: 'production'
+      NODE_ENV: 'production'
     agents:
       - *agent_queue
 
@@ -60,7 +60,7 @@ steps:
     command: 'buildkite-scripts/scripts/npm-build.sh'
     branches: 'develop'
     env:
-      REACT_APP_VIRTRU_ENV: 'staging'
+      NODE_ENV: 'staging'
     agents:
       - *agent_queue
 
@@ -68,7 +68,7 @@ steps:
     command: 'buildkite-scripts/scripts/npm-build.sh'
     branches: '!master !develop'
     env:
-      REACT_APP_VIRTRU_ENV: 'develop'
+      NODE_ENV: 'develop'
     agents:
       - *agent_queue
 
@@ -83,11 +83,28 @@ steps:
       - *agent_queue
   - wait
 
+  - label: ':s3: Deploy to S3 Production'
+  command: 'buildkite-scripts/scripts/developer-demos/deploy-to-s3.sh'
+  branches: 'master'
+  env:
+    S3_PATH: 'dd-production'
+  agents:
+    - *agent_queue
+  - wait
+
   - label: ':s3: Invalidate CloudFront Cache Staging'
     command: 'buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh'
     branches: 'develop'
     env:
       S3_PATH: 'dd-staging'
+    agents:
+      - *agent_queue
+
+  - label: ':s3: Invalidate CloudFront Cache Production'
+    command: 'buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh'
+    branches: 'master'
+    env:
+      S3_PATH: 'dd-production'
     agents:
       - *agent_queue
 
