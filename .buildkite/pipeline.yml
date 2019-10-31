@@ -4,6 +4,7 @@ env:
   DEPLOY_ENVIRONMENT_NAME: production
   S3_HOSTNAME: demos.developer.virtru.com
   USE_NODE_10: true
+  SKIP_ARTIFACT_UPLOAD: true
 
 agents:
   queue: "${BUILDKITE_QUEUE:-default}"
@@ -45,7 +46,7 @@ steps:
 
   - label: ':npm: NPM Build (Staging)'
     command: 'buildkite-scripts/scripts/npm-build.sh'
-    branches: 'develop'
+    branches: 'master'
     env:
       NODE_ENV: 'staging'
     agents:
@@ -79,7 +80,7 @@ steps:
   ####
   - label: ':s3: Deploy to S3 (Staging)'
     command: 'buildkite-scripts/scripts/developer-demos/deploy-to-s3.sh'
-    branches: 'develop'
+    branches: 'master'
     env:
       S3_PATH: 'dd-staging'
     agents:
@@ -89,7 +90,7 @@ steps:
 
   - label: ':s3: Invalidate CloudFront Cache (Staging)'
     command: 'buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh'
-    branches: 'develop'
+    branches: 'master'
     env:
       S3_PATH: 'dd-staging'
     agents:
