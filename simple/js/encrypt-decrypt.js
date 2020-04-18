@@ -42,7 +42,7 @@ async function encrypt(fileData, filename) {
   const enc = await client.encrypt(encryptParams);
   console.log('Enc: ', typeof enc);
 
-  console.log(RCA3Utils.fileToURL(fileData, filename));
+
   return enc;
 }
 
@@ -76,6 +76,10 @@ function buildDecryptFilename(filename) {
 async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, completion) {
   if (shouldEncrypt) {
     const encrypted = await encrypt(filedata, filename);
+    const encryptedBuffer = await encrypted.toBuffer();
+
+    console.log(RCA3Utils.fileToURL(encryptedBuffer, filename));
+
     await encrypted.toFile(`${filename}.tdf`);
   } else {
     const decrypted = await decrypt(filedata);

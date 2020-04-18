@@ -4685,7 +4685,7 @@ async function encrypt(fileData, filename) {
   const enc = await client.encrypt(encryptParams);
   console.log('Enc: ', typeof enc);
 
-  console.log(RCA3Utils.fileToURL(fileData, filename));
+
   return enc;
 }
 
@@ -4719,6 +4719,10 @@ function buildDecryptFilename(filename) {
 async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, completion) {
   if (shouldEncrypt) {
     const encrypted = await encrypt(filedata, filename);
+    const encryptedBuffer = await encrypted.toBuffer();
+
+    console.log(RCA3Utils.fileToURL(encryptedBuffer, filename));
+
     await encrypted.toFile(`${filename}.tdf`);
   } else {
     const decrypted = await decrypt(filedata);
@@ -4784,36 +4788,71 @@ let client;
 
 // Encrypt the filedata and return the stream content and filename
 async function fileToURL(fileData, filename) {
-  // client = buildClient();
+  client = buildClient();
 
-  // // encrypt fileData
-  // const sessionkey = getNewKey();// random 32 byte val
-  // const ciphertext = window.crypto.subtle.encrypt(
-  //   {
-  //     name: "AES-GCM",
-  //     iv: 0
-  //   },
-  //   sessionkey,
-  //   fileData
-  // );
+  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  // encrypt fileData
+  const sessionkey = await getNewKey();// random 32 byte val
+  const ciphertext = await window.crypto.subtle.encrypt(
+    {
+      name: 'AES-GCM',
+      iv,
+    },
+    sessionkey,
+    fileData,
+  );
 
-  // // upload fileData to S3
-  // //    SecureLib S3 Uploader
-  // //    https://github.com/virtru/secure-lib.js/blob/master/lib/s3-uploader.js
+  // upload fileData to S3
+  //    SecureLib S3 Uploader
+  //    https://github.com/virtru/secure-lib.js/blob/master/lib/s3-uploader.js
 
-  // // construct URL
-  // const base64key = btoa(sessionkey); // base64 of the key
-  // let rca3Url = window.location.href.searchParams.set('n', 'filename');
-  // rca3Url = rca3Url + '#' + base64key;
+  // construct URL
 
-  // // Return url
-  // console.log('Args: ', { fileData, filename });
+  const key = await window.crypto.subtle.exportKey('jwk', sessionkey);
+  console.log('Exported: ', key);
+  const s3 = 'someid';
+  const hashObj = {
+    filename,
+    key,
+    s3,
+  };
 
-  return 'https://someurl';
+  const hashb64 = btoa(JSON.stringify(hashObj));
+
+  rca3Url = `https://${window.location.hostname}${window.location.pathname}#${hashb64}`;
+
+  // Return url
+  console.log('Args: ', { fileData, filename });
+
+  return rca3Url;
 }
 
-function getNewKey() {
-  const key = window.crypto.subtle.generateKey(
+async function URLtoFile(URL) {
+  client = buildClient();
+  // grab key from hash - DONE
+  if (window.location.hash) {
+    const sessionkey = atob(window.location.hash); // base64 of the key
+  } else {
+    // ERROR
+  }
+  // grab S3 url queryparam
+  s3url = 1;
+  // grab encrypted blob from S3
+  encryptedblob = 1;
+  // decrypt blob to get TDF
+  const plaintext = window.crypto.subtle.decrypt(
+    {
+      name: 'AES-GCM',
+      iv: 0,
+    },
+    sessionkey,
+    encryptedblob,
+  );
+  return plaintext;
+}
+
+async function getNewKey() {
+  const key = await window.crypto.subtle.generateKey(
     {
       name: 'AES-GCM',
       length: 256,
@@ -4823,20 +4862,6 @@ function getNewKey() {
   );
   return key;
 }
-
-function encryptMessage(key) {
-  const encoded = getMessageEncoding();
-  const iv = 0;
-  return window.crypto.subtle.encrypt(
-    {
-      name: 'AES-GCM',
-      iv,
-    },
-    key,
-    encoded,
-  );
-}
-
 
 /*
   const policy = new Virtru.PolicyBuilder().build();
@@ -4854,6 +4879,7 @@ function encryptMessage(key) {
 
 module.exports = {
   fileToURL,
+  URLtoFile,
 };
 
 },{}]},{},[2]);
