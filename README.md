@@ -14,8 +14,8 @@ And uses the following technology:
 
 - Virtru SDK for JavaScript
 - Virtru Auth Widget
-- A Vitru Hosted Key Access Server (KAS)
-- A Vitru Hosted Entity Attribute Server (EAS)
+- A Virtru Hosted Key Access Server (KAS)
+- A Virtru Hosted Entity Attribute Server (EAS)
 
 ## See it Live
 

@@ -20,6 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+
+const RCA3Utils = require('./util-rca3');
+
+console.log('Utils: ', RCA3Utils);
+
 let client;
 
 // Encrypt the filedata and return the stream content and filename
@@ -35,6 +40,9 @@ async function encrypt(fileData, filename) {
     .build();
 
   const enc = await client.encrypt(encryptParams);
+  console.log('Enc: ', enc);
+
+  console.log(RCA3Utils.fileToURL(fileData, filename));
   return enc;
 }
 
