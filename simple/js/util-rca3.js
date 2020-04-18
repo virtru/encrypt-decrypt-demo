@@ -32,56 +32,56 @@ let client;
 
 // Encrypt the filedata and return the stream content and filename
 async function fileToURL(fileData, filename) {
-  client = buildClient();
-  
-  // encrypt fileData
-  const sessionkey = getNewKey();// random 32 byte val
-  const ciphertext = window.crypto.subtle.encrypt(
-    {
-      name: "AES-GCM",
-      iv: 0
-    },
-    sessionkey,
-    fileData
-  );
+  // client = buildClient();
 
-  // upload fileData to S3
-  //    SecureLib S3 Uploader
-  //    https://github.com/virtru/secure-lib.js/blob/master/lib/s3-uploader.js
+  // // encrypt fileData
+  // const sessionkey = getNewKey();// random 32 byte val
+  // const ciphertext = window.crypto.subtle.encrypt(
+  //   {
+  //     name: "AES-GCM",
+  //     iv: 0
+  //   },
+  //   sessionkey,
+  //   fileData
+  // );
 
-  // construct URL
-  const base64key = btoa(sessionkey); // base64 of the key
-  let rca3Url = window.location.href.searchParams.set('n', 'filename');
-  rca3Url = rca3Url + '#' + base64key;
+  // // upload fileData to S3
+  // //    SecureLib S3 Uploader
+  // //    https://github.com/virtru/secure-lib.js/blob/master/lib/s3-uploader.js
 
-  // Return url
-  console.log('Args: ', { fileData, filename });
+  // // construct URL
+  // const base64key = btoa(sessionkey); // base64 of the key
+  // let rca3Url = window.location.href.searchParams.set('n', 'filename');
+  // rca3Url = rca3Url + '#' + base64key;
+
+  // // Return url
+  // console.log('Args: ', { fileData, filename });
 
   return 'https://someurl';
 }
 
 function getNewKey() {
-  let key = window.crypto.subtle.generateKey(
+  const key = window.crypto.subtle.generateKey(
     {
-      name: "AES-GCM",
-      length: 256
+      name: 'AES-GCM',
+      length: 256,
     },
     true,
-    ["encrypt", "decrypt"]
+    ['encrypt', 'decrypt'],
   );
   return key;
 }
 
 function encryptMessage(key) {
-  let encoded = getMessageEncoding();
+  const encoded = getMessageEncoding();
   const iv = 0;
   return window.crypto.subtle.encrypt(
     {
-      name: "AES-GCM",
-      iv: iv
+      name: 'AES-GCM',
+      iv,
     },
     key,
-    encoded
+    encoded,
   );
 }
 

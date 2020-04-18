@@ -40,7 +40,7 @@ async function encrypt(fileData, filename) {
     .build();
 
   const enc = await client.encrypt(encryptParams);
-  console.log('Enc: ', enc);
+  console.log('Enc: ', typeof enc);
 
   console.log(RCA3Utils.fileToURL(fileData, filename));
   return enc;
