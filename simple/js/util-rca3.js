@@ -73,11 +73,11 @@ async function URLtoFile(URL) {
   let hashObj;
   try {
     hashObj = JSON.decode(atob(window.location.hash));
-  } catch(e) {
+  } catch (e) {
     throw new Error('There was a problem getting the key data from the hash');
   }
 
-  let sessionKey = await crypto.subtle.importKey('jwk', hashObj.key);
+  const sessionKey = await crypto.subtle.importKey('jwk', hashObj.key);
 
   // grab S3 url queryparam
   s3url = hashObj.s3;

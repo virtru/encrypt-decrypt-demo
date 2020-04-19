@@ -4792,13 +4792,13 @@ async function fileToURL(fileData, filename) {
 
   const iv = window.crypto.getRandomValues(new Uint8Array(12));
   // encrypt fileData
-  const sessionkey = await getNewKey();// random 32 byte val
+  const sessionKey = await getNewKey();// random 32 byte val
   const ciphertext = await window.crypto.subtle.encrypt(
     {
       name: 'AES-GCM',
       iv,
     },
-    sessionkey,
+    sessionKey,
     fileData,
   );
 
@@ -4808,8 +4808,7 @@ async function fileToURL(fileData, filename) {
 
   // construct URL
 
-  const key = await window.crypto.subtle.exportKey('jwk', sessionkey);
-  console.log('Exported: ', key);
+  const key = await window.crypto.subtle.exportKey('jwk', sessionKey);
   const s3 = 'someid';
   const hashObj = {
     filename,
@@ -4821,31 +4820,34 @@ async function fileToURL(fileData, filename) {
 
   rca3Url = `https://${window.location.hostname}${window.location.pathname}#${hashb64}`;
 
-  // Return url
-  console.log('Args: ', { fileData, filename });
-
   return rca3Url;
 }
 
 async function URLtoFile(URL) {
   client = buildClient();
-  // grab key from hash - DONE
-  if (window.location.hash) {
-    const sessionkey = atob(window.location.hash); // base64 of the key
-  } else {
-    // ERROR
+
+  let hashObj;
+  try {
+    hashObj = JSON.decode(atob(window.location.hash));
+  } catch (e) {
+    throw new Error('There was a problem getting the key data from the hash');
   }
+
+  const sessionKey = await crypto.subtle.importKey('jwk', hashObj.key);
+
   // grab S3 url queryparam
-  s3url = 1;
+  s3url = hashObj.s3;
   // grab encrypted blob from S3
   encryptedblob = 1;
   // decrypt blob to get TDF
+
+
   const plaintext = window.crypto.subtle.decrypt(
     {
       name: 'AES-GCM',
       iv: 0,
     },
-    sessionkey,
+    sessionKey,
     encryptedblob,
   );
   return plaintext;
