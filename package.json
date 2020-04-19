@@ -10,6 +10,7 @@
     "audit": "audit-ci --config .audit-ci.json"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "browserify": "16.2.3",
     "moment": "2.24.0"
   },

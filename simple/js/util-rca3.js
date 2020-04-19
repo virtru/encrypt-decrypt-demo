@@ -27,6 +27,9 @@ const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
 // const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
 // const getUser = () => getQueryParam('virtruAuthWidgetEmail');
 
+const axios = require('axios');
+
+console.log('Axios: ', axios);
 
 let client;
 
@@ -63,7 +66,7 @@ async function fileToURL(fileData, filename) {
   const hashb64 = btoa(JSON.stringify(hashObj));
 
   rca3Url = `https://${window.location.hostname}${window.location.pathname}#${hashb64}`;
-
+  await upload(ciphertext);
   return rca3Url;
 }
 
@@ -107,6 +110,25 @@ async function getNewKey() {
     ['encrypt', 'decrypt'],
   );
   return key;
+}
+
+async function upload(fileData) {
+  return new Promise((resolve, reject) => {
+    const formData = new FormData();
+    formData.append('file', new Blob([fileData]));
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/upload');
+    xhr.onload = function () {
+      resolve(JSON.parse(xhr.responseText));
+    };
+
+    xhr.send(formData);
+  });
+}
+
+async function download(fileId) {
+  return fileId;
 }
 
 /*
