@@ -49,24 +49,21 @@ async function fileToURL(fileData, filename) {
     fileData,
   );
 
-  // upload fileData to S3
-  //    SecureLib S3 Uploader
-  //    https://github.com/virtru/secure-lib.js/blob/master/lib/s3-uploader.js
-
-  // construct URL
+  const response = await upload(ciphertext);
 
   const key = await window.crypto.subtle.exportKey('jwk', sessionKey);
-  const s3 = 'someid';
+
+  const id = response.filename;
   const hashObj = {
     filename,
     key,
-    s3,
+    id,
   };
 
   const hashb64 = btoa(JSON.stringify(hashObj));
 
   rca3Url = `https://${window.location.hostname}${window.location.pathname}#${hashb64}`;
-  await upload(ciphertext);
+
   return rca3Url;
 }
 
@@ -116,11 +113,11 @@ async function upload(fileData) {
   return new Promise((resolve, reject) => {
     const formData = new FormData();
     formData.append('file', new Blob([fileData]));
-
     const xhr = new XMLHttpRequest();
     xhr.open('POST', '/upload');
     xhr.onload = function () {
-      resolve(JSON.parse(xhr.responseText));
+      const resp = JSON.parse(xhr.responseText);
+      resolve(resp);
     };
 
     xhr.send(formData);

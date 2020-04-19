@@ -43,15 +43,12 @@ app.use(express.static(path.join(__dirname, '../simple')));
 
 app.post('/upload', upload.single('file'), (req, res, next) => {
   const file = req.file;
-
   if (!file) {
     const error = new Error('Please upload a file');
     error.httpStatusCode = 400;
     return next(error);
   }
-  console.log('Uploading: ', file);
-  res.send('resp')
-  
+  res.send(JSON.stringify(file));
 });
 
 
