@@ -4778,10 +4778,20 @@ module.exports = {
 
 /* eslint-disable no-unused-vars */
 
+// Function to consistently get URL into the localStorage
+if (window.location.hash) {
+  localStorage.setItem('pageFragment', window.location.hash.substr(1));
+} else {
+  // no new fragment, just use the local storage thing....
+}
+
 const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
 // const getById = (id) => document.getElementById(id);
 // const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
 // const getUser = () => getQueryParam('virtruAuthWidgetEmail');
+
+// const axios = require('axios');
+// console.log('Axios: ', axios);
 
 let client;
 
