@@ -12,7 +12,8 @@
   "dependencies": {
     "axios": "^0.19.2",
     "browserify": "16.2.3",
-    "moment": "2.24.0"
+    "moment": "2.24.0",
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "audit-ci": "^2.3.0",

@@ -27,17 +27,11 @@ const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
 // const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
 // const getUser = () => getQueryParam('virtruAuthWidgetEmail');
 
-const axios = require('axios');
-
-console.log('Axios: ', axios);
-
 let client;
 
 // Encrypt the filedata and return the stream content and filename
 async function fileToURL(fileData, filename) {
-  client = buildClient();
-
-  const iv = window.crypto.getRandomValues(new Uint8Array(12));
+  const iv = new Uint8Array(12);
   // encrypt fileData
   const sessionKey = await getNewKey();// random 32 byte val
   const ciphertext = await window.crypto.subtle.encrypt(
@@ -50,7 +44,6 @@ async function fileToURL(fileData, filename) {
   );
 
   const response = await upload(ciphertext);
-
   const key = await window.crypto.subtle.exportKey('jwk', sessionKey);
 
   const id = response.filename;
@@ -64,16 +57,18 @@ async function fileToURL(fileData, filename) {
 
   rca3Url = `https://${window.location.hostname}${window.location.pathname}#${hashb64}`;
 
+  const dl = await URLtoFile(hashb64);
+
+  console.log('DL: ', dl);
+
   return rca3Url;
 }
 
-async function URLtoFile(URL) {
-// URL is the full URL of the file.
-  client = buildClient();
-
+async function URLtoFile(hash) {
+  // URL is the full URL of the file.
   let hashObj;
   try {
-    hashObj = JSON.parse(atob(URL.hash.substr(1)));
+    hashObj = JSON.parse(atob(hash));
   } catch (e) {
     throw new Error('There was a problem getting the key data from the hash');
   }
@@ -87,18 +82,20 @@ async function URLtoFile(URL) {
   );
 
   // grab S3 url queryparam
-  s3url = hashObj.s3;
-  // grab encrypted blob from S3
-  encryptedblob = 1;
+  const fileId = hashObj.id;
+
+  // Grab the encrypted blob
+  const encryptedArrayBuffer = await download(fileId);
+
   // decrypt blob to get TDF
 
-  const plaintext = window.crypto.subtle.decrypt(
+  const plaintext = await window.crypto.subtle.decrypt(
     {
       name: 'AES-GCM',
-      iv: 0,
+      iv: new Uint8Array(12),
     },
     sessionKey,
-    encryptedblob,
+    encryptedArrayBuffer,
   );
   return plaintext;
 }
@@ -130,8 +127,18 @@ async function upload(fileData) {
   });
 }
 
-async function download(fileId) {
-  return fileId;
+async function download(id) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.responseType = 'arraybuffer';
+    xhr.open('GET', `/uploads/${id}`);
+    xhr.onload = function () {
+      console.log(xhr.response);
+      resolve(xhr.response);
+    };
+
+    xhr.send();
+  });
 }
 
 /*

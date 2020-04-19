@@ -39,6 +39,7 @@ var options = {
 
 var app = express();
 app.use(express.static(path.join(__dirname, '../simple')));
+app.use('/uploads',express.static(path.join(__dirname, './uploads')));
 
 
 app.post('/upload', upload.single('file'), (req, res, next) => {
