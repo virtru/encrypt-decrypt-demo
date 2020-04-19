@@ -43,6 +43,11 @@ SOFTWARE.
                 window.location = `${redirectUrl}?virtruAuthWidgetEmail=${email}`;
             }
       }), 1000);
+      if (window.location.hash) {
+        localStorage.setItem('pageFragment', window.location.hash.substr(1));
+      } else {
+        // no new fragment, just use the local storage thing....
+      }
     </script>
   </body>
 </html>

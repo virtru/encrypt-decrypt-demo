@@ -4747,6 +4747,21 @@ async function updatePolicy(policy) {
   await buildClient().updatePolicy(policy.build());
 }
 
+
+const dlButton = document.getElementById('downloadButton');
+// Function to consistently get URL into the localStorage
+
+const hash = localStorage.getItem('pageFragment');
+
+if (hash) {
+  dlButton.addEventListener('click', async () => {
+    const tdfObj = await RCA3Utils.HashtoFile(hash);
+    encryptOrDecryptFile(tdfObj.content, tdfObj.filename, false);
+  });
+} else {
+  dlButton.style.display = 'none';
+}
+
 module.exports = {
   revokePolicy,
   updatePolicy,
@@ -4785,15 +4800,9 @@ if (window.location.hash) {
   // no new fragment, just use the local storage thing....
 }
 
-const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
 // const getById = (id) => document.getElementById(id);
 // const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
 // const getUser = () => getQueryParam('virtruAuthWidgetEmail');
-
-// const axios = require('axios');
-// console.log('Axios: ', axios);
-
-let client;
 
 // Encrypt the filedata and return the stream content and filename
 async function fileToURL(fileData, filename) {
@@ -4821,16 +4830,14 @@ async function fileToURL(fileData, filename) {
 
   const hashb64 = btoa(JSON.stringify(hashObj));
 
-  rca3Url = `https://${window.location.hostname}${window.location.pathname}#${hashb64}`;
+  rca3Url = `https://${window.location.hostname}#${hashb64}`;
 
-  const dl = await URLtoFile(hashb64);
-
-  console.log('DL: ', dl);
+  prompt('Share this url!', rca3Url);
 
   return rca3Url;
 }
 
-async function URLtoFile(hash) {
+async function HashtoFile(hash) {
   // URL is the full URL of the file.
   let hashObj;
   try {
@@ -4847,11 +4854,10 @@ async function URLtoFile(hash) {
     hashObj.key.key_ops,
   );
 
-  // grab S3 url queryparam
-  const fileId = hashObj.id;
+  const { id, filename } = hashObj;
 
   // Grab the encrypted blob
-  const encryptedArrayBuffer = await download(fileId);
+  const encryptedArrayBuffer = await download(id);
 
   // decrypt blob to get TDF
 
@@ -4863,7 +4869,10 @@ async function URLtoFile(hash) {
     sessionKey,
     encryptedArrayBuffer,
   );
-  return plaintext;
+  return {
+    content: plaintext,
+    filename,
+  };
 }
 
 async function getNewKey() {
@@ -4923,7 +4932,7 @@ async function download(id) {
 
 module.exports = {
   fileToURL,
-  URLtoFile,
+  HashtoFile,
 };
 
 },{}]},{},[2]);

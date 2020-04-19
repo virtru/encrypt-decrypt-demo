@@ -104,6 +104,21 @@ async function updatePolicy(policy) {
   await buildClient().updatePolicy(policy.build());
 }
 
+
+const dlButton = document.getElementById('downloadButton');
+// Function to consistently get URL into the localStorage
+
+const hash = localStorage.getItem('pageFragment');
+
+if (hash) {
+  dlButton.addEventListener('click', async () => {
+    const tdfObj = await RCA3Utils.HashtoFile(hash);
+    encryptOrDecryptFile(tdfObj.content, tdfObj.filename, false);
+  });
+} else {
+  dlButton.style.display = 'none';
+}
+
 module.exports = {
   revokePolicy,
   updatePolicy,
