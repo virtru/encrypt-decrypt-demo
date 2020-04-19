@@ -68,23 +68,29 @@ async function fileToURL(fileData, filename) {
 }
 
 async function URLtoFile(URL) {
+// URL is the full URL of the file.
   client = buildClient();
 
   let hashObj;
   try {
-    hashObj = JSON.decode(atob(window.location.hash));
+    hashObj = JSON.parse(atob(URL.hash.substr(1)));
   } catch (e) {
     throw new Error('There was a problem getting the key data from the hash');
   }
 
-  const sessionKey = await crypto.subtle.importKey('jwk', hashObj.key);
+  const sessionKey = await crypto.subtle.importKey(
+    'jwk',
+    hashObj.key,
+    { name: 'AES-GCM' },
+    false,
+    hashObj.key.key_ops,
+  );
 
   // grab S3 url queryparam
   s3url = hashObj.s3;
   // grab encrypted blob from S3
   encryptedblob = 1;
   // decrypt blob to get TDF
-
 
   const plaintext = window.crypto.subtle.decrypt(
     {
