@@ -25,7 +25,9 @@ var fs = require('fs'),
 	http = require('http'),
   https = require('https'),
   express = require('express'),
-  path = require('path');
+  path = require('path'),
+  multer  = require('multer'),
+  upload = multer({ dest: 'uploads/' });
 
 var port = process.env.VIRTRU_SECURE_READER_PORT || 80;
 var portSSL = process.env.VIRTRU_SECURE_READER_PORTSSL || 443;
@@ -37,6 +39,19 @@ var options = {
 
 var app = express();
 app.use(express.static(path.join(__dirname, '../simple')));
+app.use('/uploads',express.static(path.join(__dirname, './uploads')));
+
+
+app.post('/upload', upload.single('file'), (req, res, next) => {
+  const file = req.file;
+  if (!file) {
+    const error = new Error('Please upload a file');
+    error.httpStatusCode = 400;
+    return next(error);
+  }
+  res.send(JSON.stringify(file));
+});
+
 
 https.createServer(options, app).listen(portSSL, function() {
   console.log('Express server listening on port ' + portSSL);

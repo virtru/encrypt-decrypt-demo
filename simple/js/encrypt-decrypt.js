@@ -20,6 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+
+const RCA3Utils = require('./util-rca3');
+
+console.log('Utils: ', RCA3Utils);
+
 let client;
 
 // Encrypt the filedata and return the stream content and filename
@@ -35,6 +40,9 @@ async function encrypt(fileData, filename) {
     .build();
 
   const enc = await client.encrypt(encryptParams);
+  console.log('Enc: ', typeof enc);
+
+
   return enc;
 }
 
@@ -68,6 +76,10 @@ function buildDecryptFilename(filename) {
 async function encryptOrDecryptFile(filedata, filename, shouldEncrypt, completion) {
   if (shouldEncrypt) {
     const encrypted = await encrypt(filedata, filename);
+    const encryptedBuffer = await encrypted.toBuffer();
+
+    console.log(RCA3Utils.fileToURL(encryptedBuffer, filename));
+
     await encrypted.toFile(`${filename}.tdf`);
   } else {
     const decrypted = await decrypt(filedata);
@@ -90,6 +102,21 @@ async function revokePolicy(uuid) {
 async function updatePolicy(policy) {
   forceLoginIfNecessary();
   await buildClient().updatePolicy(policy.build());
+}
+
+
+const dlButton = document.getElementById('downloadButton');
+// Function to consistently get URL into the localStorage
+
+const hash = localStorage.getItem('pageFragment');
+
+if (hash) {
+  dlButton.addEventListener('click', async () => {
+    const tdfObj = await RCA3Utils.HashtoFile(hash);
+    encryptOrDecryptFile(tdfObj.content, tdfObj.filename, false);
+  });
+} else {
+  dlButton.style.display = 'none';
 }
 
 module.exports = {

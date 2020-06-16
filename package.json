@@ -10,14 +10,16 @@
     "audit": "audit-ci --config .audit-ci.json"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "browserify": "16.2.3",
-    "moment": "2.24.0"
+    "moment": "2.24.0",
+    "url-parse": "^1.4.7"
   },
   "devDependencies": {
     "audit-ci": "^2.3.0",
-    "eslint": "^6.2.1",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
     "nodemon": "^1.19.1",
     "webpack-cli": "^3.3.6"
   }

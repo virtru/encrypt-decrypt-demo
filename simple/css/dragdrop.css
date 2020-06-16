@@ -98,8 +98,6 @@ label {
 
 .drop_zones {
     margin: auto;
-    width: 70%;
-    left: 20%;
     position: absolute;
 }
 
@@ -113,11 +111,11 @@ label {
 
 #encrypt_drop_zone {
   	font-family: 'Raleway';
-    font-size: 14px;
-  	height: 300px;
-  	width: 500px;
+    font-size: 12px;
+  	height: 200px;
+  	width: 300px;
     margin-right: 20px;
-  	text-indent: 200px;
+  	text-indent: 100px;
     border: 4px dashed #707070;
     background-repeat: no-repeat;
     border-radius: 25px;
@@ -126,10 +124,10 @@ label {
 
   #decrypt_drop_zone {
   	font-family: 'Raleway';
-    font-size: 14px;
-  	height: 300px;
-  	width: 500px;
-  	text-indent: 200px;
+    font-size: 12px;
+  	height: 200px;
+  	width: 300px;
+  	text-indent: 100px;
     border: 4px dashed #707070;
     background-repeat: no-repeat;
     border-radius: 25px;
