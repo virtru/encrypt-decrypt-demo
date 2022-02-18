@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 // Require all node modules needed to be access by the browser
 const moment = require('moment');
 
 // Imports for our demo
-const simpleEncryptDecrypt = require('./encrypt-decrypt.js');
+const simpleEncryptDecrypt = require('./encrypt-decrypt');
 
 // Load all global properties of our explicitly imported modules on the window
 Object.keys(simpleEncryptDecrypt).forEach((key) => {
