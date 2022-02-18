@@ -27,7 +27,7 @@ cleanup(){
 }
 
 build(){
-	browserify ./simple/js/browserify.js -o ./simple/js/build/demo-utils.js
+	npx browserify ./simple/js/browserify.js -o ./simple/js/build/demo-utils.js
 }
 
 cleanup && build
