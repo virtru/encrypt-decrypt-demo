@@ -10,8 +10,8 @@
     "audit": "audit-ci --config .audit-ci.json"
   },
   "dependencies": {
-    "browserify": "17.0.0",
-    "moment": "2.29.1"
+    "browserify": "^17.0.0",
+    "moment": "^2.29.1"
   },
   "devDependencies": {
     "audit-ci": "^5.1.2",
