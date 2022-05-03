@@ -22,7 +22,7 @@
 
 cleanup(){
 	if [ -f ./simple/js/build/demo-utils.js ]; then 
-		rm ./simple/js/build/demo-utils.js; 
+		rm ./simple/js/build/demo-utils.js
 	fi
 }
 
