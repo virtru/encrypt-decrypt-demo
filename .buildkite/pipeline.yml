@@ -40,6 +40,7 @@ steps:
     branches: 'master'
     env:
       NODE_ENV: 'production'
+      SKIP_ARTIFACT_UPLOAD: 1
     agents:
       - *agent_queue
 
@@ -48,6 +49,7 @@ steps:
     branches: 'develop'
     env:
       NODE_ENV: 'staging'
+      SKIP_ARTIFACT_UPLOAD: 1
     agents:
       - *agent_queue
 
@@ -56,6 +58,7 @@ steps:
     branches: '!master !develop'
     env:
       NODE_ENV: 'develop'
+      SKIP_ARTIFACT_UPLOAD: 1
     agents:
       - *agent_queue
 
