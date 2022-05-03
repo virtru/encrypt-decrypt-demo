@@ -38,7 +38,6 @@ async function encrypt(fileData, filename) {
   return enc;
 }
 
-
 // Decrypt the file by creating an object url (for now) and return the stream content
 async function decrypt(fileData) {
   client = buildClient();

@@ -22,11 +22,10 @@
 
 /* eslint-disable no-unused-vars */
 
-const BASE_URL = new RegExp(/^.*\//).exec(window.location.href);
+const BASE_URL = /^.*\//.exec(window.location.href);
 const getById = (id) => document.getElementById(id);
 const getQueryParam = (id) => new URL(window.location.href).searchParams.get(id);
 const getUser = () => getQueryParam('virtruAuthWidgetEmail');
-
 
 let client;
 
@@ -42,13 +41,11 @@ const isSupportedBrowser = () => {
   return supported;
 };
 
-
 // Builds a new client (if needed)
 function buildClient() {
   client = client || new Virtru.Client({ email: getUser() });
   return client;
 }
-
 
 // Ensure the user is logged in and has a valid id saved. Otherwise, forward to index
 function loggedIn() {

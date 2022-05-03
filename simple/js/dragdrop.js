@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-
 let fetchedPolicy;
 let fetchedPolicyBuilder;
 
@@ -101,7 +100,6 @@ function processFile(fileOb, completion) {
 
   reader.readAsArrayBuffer(fileOb);
 }
-
 
 // UI function
 function addUserToList(user) {
@@ -256,7 +254,6 @@ function handleFileViewer(evt) {
 
 /* eslint-enable no-unused-vars */
 
-
 // UI function
 function toggleRevokeButton(enabled) {
   if (!enabled) {
@@ -301,7 +298,6 @@ async function update() {
   updateInProgress = false;
 }
 
-
 // Ensures that the date that is selected before an update is complete, otherwise stop the update
 function validateAndSetDatePickerSelection() {
   // If a user selects they want an expiration, try to set it on the policy
@@ -341,7 +337,6 @@ function initializeDatePicker() {
   }
 }
 
-
 // Initialize the reshare checkbox with what's in the fetched policy (if one exists)
 function initializeReshareClickCheckbox() {
   const resharePresent = fetchedPolicy && !fetchedPolicy.hasReshare();
@@ -374,7 +369,6 @@ function toggleDatePicker() {
 
   datePicker.disabled = !checkExpirationEnabled.checked;
 }
-
 
 // UI function
 function toggleReshareCheckbox(enabled) {
