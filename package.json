@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "browserify": "^17.0.0",
-    "moment": "^2.29.1"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "audit-ci": "^5.1.2",
