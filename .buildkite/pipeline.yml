@@ -37,7 +37,7 @@ steps:
   ####
   - label: ':npm: NPM Build (Production)'
     command: 'buildkite-scripts/scripts/npm-build.sh'
-    branches: 'master'
+    branches: 'main'
     env:
       NODE_ENV: 'production'
       SKIP_ARTIFACT_UPLOAD: 1
@@ -55,7 +55,7 @@ steps:
 
   - label: ':npm: NPM Build (Develop)'
     command: 'buildkite-scripts/scripts/npm-build.sh'
-    branches: '!master !develop'
+    branches: '!main !develop'
     env:
       NODE_ENV: 'develop'
       SKIP_ARTIFACT_UPLOAD: 1
@@ -106,7 +106,7 @@ steps:
 
   - block: 'Check your branch name'
     prompt: 'Your branch name does not match expected options. This will not result in a successful deployment unless you have explicitly defined environment variables.'
-    branches: '!master !develop !*release/* !*feature/* !*hotfix/* !*bug/*'
+    branches: '!main !develop !*release/* !*feature/* !*hotfix/* !*bug/*'
 
   - wait
 
@@ -115,7 +115,7 @@ steps:
   ####
   - label: ':s3: Deploy to S3 (Develop)'
     command: 'buildkite-scripts/scripts/developer-demos/deploy-to-s3.sh'
-    branches: '!master !develop'
+    branches: '!main !develop'
     env:
       S3_PATH: 'dd-develop'
     agents:
@@ -126,7 +126,7 @@ steps:
   ####
   - label: ':s3: Deploy to S3 (Production)'
     command: 'buildkite-scripts/scripts/developer-demos/deploy-to-s3.sh'
-    branches: 'master'
+    branches: 'main'
     env:
       S3_PATH: 'dd-production'
     agents:
@@ -139,7 +139,7 @@ steps:
   ####
   - label: ':s3: Invalidate CloudFront Cache (Develop)'
     command: 'buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh'
-    branches: '!master !develop'
+    branches: '!main !develop'
     env:
       S3_PATH: 'dd-develop'
     agents:
@@ -150,7 +150,7 @@ steps:
   ####
   - label: ':s3: Invalidate CloudFront Cache (Production)'
     command: 'buildkite-scripts/scripts/developer-demos/invalidate-cloudfront-cache.sh'
-    branches: 'master'
+    branches: 'main'
     env:
       S3_PATH: 'dd-production'
     agents:
